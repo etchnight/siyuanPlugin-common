@@ -7,7 +7,20 @@
  */
 
 import { fetchSyncPost, IWebSocketData } from "siyuan";
-
+//没办法，为了复用
+import {
+  Notebook,
+  NotebookConf,
+  NotebookId,
+  DocumentId,
+  BlockId,
+  doOperation,
+  PreviousID,
+  ParentID,
+  BlockSubType,
+  Block,
+  BlockType,
+} from "./types/siyuan-api";
 async function request(url: string, data: any) {
   let response: IWebSocketData = await fetchSyncPost(url, data);
   let res = response.code === 0 ? response.data : null;
@@ -500,7 +513,7 @@ export async function getChildrenBlocks(id: BlockId): Promise<Block[]> {
  * @returns 文档的父级会返回box或doc,box会返回null
  */
 export async function getParentBlock(block: Block): Promise<Block | null> {
-  let parent: Block | null;
+  let parent: Block | null = null;
   //*普通块查parent
   if (block.parent_id) {
     parent = await getBlockById(block.parent_id);

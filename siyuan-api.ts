@@ -7,7 +7,6 @@
  */
 
 import { fetchSyncPost, IWebSocketData } from "siyuan";
-//没办法，为了复用
 import {
   Notebook,
   NotebookConf,
@@ -28,7 +27,7 @@ async function request(url: string, data: any) {
 }
 
 // **************************************** Noteboook ****************************************
-
+const _NOTEBOOK = 0;
 export type ReslsNotebooks = {
   notebooks: Notebook[];
 };
@@ -87,6 +86,7 @@ export async function setNotebookConf(
 }
 
 // **************************************** Document ****************************************
+const _DOCUMENT = 0;
 export async function createDocWithMd(
   notebook: NotebookId,
   path: string,
@@ -159,6 +159,7 @@ export async function getHPathByID(id: BlockId): Promise<string> {
 }
 
 // **************************************** Asset Files ****************************************
+const _ASSET = 0;
 export type ResUpload = {
   errFiles: string[];
   succMap: { [key: string]: string };
@@ -178,6 +179,7 @@ export async function upload(
 }
 
 // **************************************** Block ****************************************
+const _BLOCK = 0;
 export type ResdoOperations = {
   doOperations: doOperation[];
   undoOperations: doOperation[] | null;
@@ -276,6 +278,7 @@ export async function getChildBlocks(id: BlockId): Promise<ChildBlock[]> {
 }
 
 // **************************************** Attributes ****************************************
+const _Attributes = 0;
 export async function setBlockAttrs(
   id: BlockId,
   attrs: { [key: string]: string }
@@ -299,7 +302,7 @@ export async function getBlockAttrs(
 }
 
 // **************************************** SQL ****************************************
-
+const _SQL = 0;
 export async function sql(sql: string): Promise<any[]> {
   let sqldata = {
     stmt: sql,
@@ -337,7 +340,7 @@ export async function getBlockById(
   return null;
 }
 // **************************************** Template ****************************************
-
+const _Templates = 0;
 export type ResGetTemplates = {
   content: string;
   path: string;
@@ -361,6 +364,7 @@ export async function renderSprig(template: string): Promise<string> {
 
 // **************************************** File ****************************************
 
+const _File = 0;
 export async function getFile(path: string): Promise<any> {
   let data = {
     path: path,
@@ -406,6 +410,7 @@ export async function readDir(path: string): Promise<ResReadDir> {
   return request(url, data);
 }
 
+const _Export = 0;
 export type ResExportMdContent = {
   hPath: string;
   content: string;
@@ -419,7 +424,7 @@ export async function exportMdContent(
   let url = "/api/export/exportMdContent";
   return request(url, data);
 }
-
+const _Conversion = 0;
 export type PandocArgs = string;
 export async function pandoc(args: PandocArgs[]) {
   let data = {
@@ -429,7 +434,31 @@ export async function pandoc(args: PandocArgs[]) {
   return request(url, data);
 }
 
+const _Notification = 0;
+export async function pushMsg(msg: string, timeout?: number): Promise<void> {
+  let data: {
+    msg: string;
+    timeout?: number;
+  };
+  data = { msg: msg };
+  if (timeout) {
+    data.timeout = timeout;
+  }
+  await request("/api/notification/pushMsg", data);
+}
+export async function pushErrMsg(msg: string, timeout?: number): Promise<void> {
+  let data: {
+    msg: string;
+    timeout?: number;
+  };
+  data = { msg: msg };
+  if (timeout) {
+    data.timeout = timeout;
+  }
+  await request("/api/notification/pushErrMsg", data);
+}
 // **************************************** System ****************************************
+const _System = 0;
 export type ResBootProgress = {
   progress: number;
   details: string;
@@ -446,40 +475,10 @@ export async function currentTime(): Promise<number> {
   return request("/api/system/currentTime", {});
 }
 
-//*******增补 */
+//*******增补*******/
+const _Other = 0;
 //import _ from "lodash"
 import findKey from "lodash/findKey";
-async function fetchPost(data: object, api: string): Promise<siyuanRes> {
-  let SIYUAN_PORT = "http://127.0.0.1:1210";
-  if (window) {
-    SIYUAN_PORT = window.origin;
-  }
-  const body = JSON.stringify(data);
-  const result = await fetch(`${SIYUAN_PORT}${api}`, {
-    //{${window.origin}
-    body: body,
-    method: "POST",
-  });
-  let json: siyuanRes = await result.json();
-  if (json.code == 1) {
-    console.warn("!出现错误，以下是错误信息");
-    console.warn(data);
-    console.warn(json.msg);
-  }
-  return json;
-}
-
-export async function pushErrMsg(msg: string, timeout?: number): Promise<void> {
-  let data: {
-    msg: string;
-    timeout?: number;
-  };
-  data = { msg: msg };
-  if (timeout) {
-    data.timeout = timeout;
-  }
-  await fetchPost(data, "/api/notification/pushErrMsg");
-}
 /**
  * box会返回其下文档块,文档会查找子文档和本文档下的内容
  * @param id
@@ -588,13 +587,12 @@ export async function getDefBlocks(id: string) {
   AND refs.def_block_id='${id}'`);
 }
 
-type siyuanRes = {
-  code: number;
-  msg: string;
-  data: any;
-};
-
-async function getDoc(id: string): Promise<getDocRes> {
+/**
+ * @todo 该api未在文档中
+ * @param id
+ * @returns
+ */
+export async function getDoc(id: string): Promise<getDocRes> {
   const data = {
     id: id,
     k: "",
@@ -602,8 +600,8 @@ async function getDoc(id: string): Promise<getDocRes> {
     mode: 0,
     size: 48,
   };
-  let json = await fetchPost(data, "/api/filetree/getDoc");
-  return json.data;
+  let json = await request("/api/filetree/getDoc", data);
+  return json;
 }
 interface getDocRes {
   blockCount: number;
@@ -680,6 +678,11 @@ export async function getMarkdownSorted(id: string): Promise<string> {
   }
   return markdownList.join("\n\n");
 }
+/**
+ * 通过dom获取块及子块的信息，该函数会改变attrList
+ * @param dom
+ * @param attrList
+ */
 function getDomBlockAttrsFromDom(dom: Element, attrList: domBlockAttr[]) {
   let domBlockAttr: domBlockAttr = {
     data_node_id: dom.getAttribute("data-node-id"),
@@ -751,10 +754,10 @@ export enum typeAbbrMap {
   textmark = "NodeTextMark",
 }
 
-//todo这个函数不能在挂件中使用
 /**
  * 获取当前光标所在块id，注意不是鼠标指针,这是一个纯前端方法
  * 如果没有找到，则返回null
+ * 这个函数不能在挂件中使用
  */
 export function getFocusNodeId(): string | null {
   if (!window) {

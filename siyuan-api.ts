@@ -486,6 +486,12 @@ import findKey from "lodash/findKey";
  */
 export async function getChildrenBlocks(id: BlockId): Promise<Block[]> {
   let children: Block[] = [];
+  //*查找子文档、查找本文档下的内容
+  children = await sql(`SELECT * FROM blocks WHERE 
+  (SUBSTR(blocks.path,LENGTH(blocks.path)-24-23,22) ='${id}' 
+  AND type='d')
+  OR(parent_id='${id}')`);
+  /*
   //*查找本文档下的内容
   children = await sql(`SELECT * FROM blocks WHERE parent_id='${id}'`);
   //*查找子文档
@@ -496,7 +502,7 @@ export async function getChildrenBlocks(id: BlockId): Promise<Block[]> {
     if (child.path.indexOf(child.id) - child.path.indexOf(id) == 23) {
       children.push(child);
     }
-  }
+  }*/
   if (children.length > 0) {
     return children;
   }

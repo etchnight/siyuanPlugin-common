@@ -39,7 +39,7 @@ export type BlockType =
   | "audio"
   | "video"
   | "other"
-  | "box";//!
+  | "box"; //!
 
 export type BlockSubType =
   | "d1"
@@ -75,7 +75,7 @@ export type BlockSubType =
   | "audio"
   | "video"
   | "other"
-  | "box";//!
+  | "box"; //!
 
 export type Block = {
   id: BlockId;
@@ -109,3 +109,40 @@ export type doOperation = {
   previousID: BlockId;
   retData: null;
 };
+
+export interface Window_siyuan {
+  altIsPressed: boolean;
+  backStack: Array;
+  blockPanels: {
+    app: any;
+    defIds: BlockId[];
+    editors: any[];
+    element: HTMLElement;
+    id: string;
+    isBacklink: undefined | boolean;
+    nodeIds: BlockId[];
+    targetElement: undefined | HTMLElement;
+    x: number;
+    y: number;
+  }[];
+  config: any;
+  ctrlIsPressed: boolean;
+  dialogs: Array;
+  emojis: Array;
+  languages: any;
+  layout: {
+    layout: ue;
+    centerLayout: ue;
+    leftDock: jc;
+    rightDock: jc;
+    bottomDock: jc;
+  };
+  menus: l_;
+  notebooks: Array;
+  reqIds: any;
+  shiftIsPressed: boolean;
+  storage: any;
+  transactions: Array;
+  user: any;
+  ws: Ot;
+}

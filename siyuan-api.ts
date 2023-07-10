@@ -20,6 +20,7 @@ import {
   Block,
   BlockType,
   spanSqliteType,
+  span,
 } from "./types/siyuan-api";
 async function request(url: string, data: any) {
   let response: IWebSocketData = await fetchSyncPost(url, data);
@@ -518,7 +519,12 @@ export async function getChildrenBlocks(id: BlockId): Promise<Block[]> {
  * @param block
  * @returns 文档的父级会返回box或doc,box会返回null
  */
-export async function getParentBlock(block: Block): Promise<Block | null> {
+export async function getParentBlock(block: {
+  parent_id?: BlockId;
+  type: string;
+  path: string;
+  box: string;
+}): Promise<Block | null> {
   let parent: Block | null = null;
   //*普通块查parent
   if (block.parent_id) {
@@ -594,7 +600,7 @@ export async function getDefBlocks(id: string) {
   AND refs.def_block_id='${id}'`);
 }
 
-export async function getTagsById(id: BlockId) {
+export async function getTagsById(id: BlockId): Promise<span[]> {
   return await sql(`SELECT * FROM spans WHERE block_id='${id}' 
   AND type='textmark tag'`);
 }

@@ -100,7 +100,17 @@ export type Block = {
   created: string;
   updated: string;
 };
-
+type span = {
+  block_id: BlockId;
+  box: BlockId;
+  content: string;
+  ial: string;
+  id: string;
+  markdown: string;
+  path: string;
+  root_id: DocumentId;
+  type: spanSqliteType;
+};
 export type doOperation = {
   action: string;
   data: string;

@@ -146,3 +146,14 @@ export interface Window_siyuan {
   user: any;
   ws: Ot;
 }
+
+//todo 不全，以后再补
+export type spanSqliteType =
+  | "textmark tag"
+  | "textmark strong"
+  | "textmark block-ref"
+  | "textmark text"
+  | "textmark sup"
+  | "textmark mark"
+  | "textmark kbd"
+  | "textmark code";

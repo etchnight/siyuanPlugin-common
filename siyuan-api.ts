@@ -19,6 +19,7 @@ import {
   BlockSubType,
   Block,
   BlockType,
+  spanSqliteType,
 } from "./types/siyuan-api";
 async function request(url: string, data: any) {
   let response: IWebSocketData = await fetchSyncPost(url, data);
@@ -593,6 +594,10 @@ export async function getDefBlocks(id: string) {
   AND refs.def_block_id='${id}'`);
 }
 
+export async function getTagsById(id: BlockId) {
+  return await sql(`SELECT * FROM spans WHERE block_id='${id}' 
+  AND type='textmark tag'`);
+}
 /**
  * @todo 该api未在文档中
  * @param id

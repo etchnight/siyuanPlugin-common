@@ -335,9 +335,15 @@ export async function getBlockById(
   if (blockList.length > 0) {
     return blockList[0];
   }
-  const box = await getNotebookConf(id);
-  if (box) {
-    return box2blockLike(box);
+  //*如果是文档，而文档没有内容也会查不到
+  try {
+    const box = await getNotebookConf(id);
+    if (box) {
+      return box2blockLike(box);
+    }
+  } catch (e) {
+    console.warn(`未能找到id为${id}的块或文件夹，其可能是文档且无内容`);
+    console.error(e);
   }
   return null;
 }
@@ -585,21 +591,28 @@ export async function getDescendantBlocks(id: string): Promise<Block[]> {
       )
     SELECT * FROM children_of `);
 }
-export async function getRefBlocks(id: string) {
+export async function getRefBlocksWithRefmarkdown(id: string) {
   return await sql(`SELECT blocks.*,refs.markdown AS refmarkdown
     FROM blocks JOIN refs ON blocks.id=refs.def_block_id
     WHERE blocks.id IN
     (SELECT def_block_id FROM refs WHERE block_id='${id}')
     AND refs.block_id='${id}'`);
 }
-export async function getDefBlocks(id: string) {
+export async function getRefBlocks(id: string) {
+  return await sql(`SELECT blocks.* FROM blocks WHERE blocks.id IN
+    (SELECT def_block_id FROM refs WHERE block_id='${id}')`);
+}
+export async function getDefBlocksWithRefmarkdown(id: string) {
   return await sql(`SELECT blocks.*,refs.markdown AS refmarkdown
   FROM blocks JOIN refs ON blocks.id=refs.block_id
   WHERE blocks.id IN
   (SELECT block_id FROM refs WHERE def_block_id='${id}') 
   AND refs.def_block_id='${id}'`);
 }
-
+export async function getDefBlocks(id: string) {
+  return await sql(`SELECT blocks.* FROM blocks WHERE blocks.id IN
+  (SELECT block_id FROM refs WHERE def_block_id='${id}') `);
+}
 export async function getTagsById(id: BlockId): Promise<span[]> {
   return await sql(`SELECT * FROM spans WHERE block_id='${id}' 
   AND type='textmark tag'`);

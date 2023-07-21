@@ -825,3 +825,13 @@ export function getFocusNodeId(): string | null {
   }
   return nodeId;
 }
+
+//*静态方法
+const _common = 0;
+/**
+ * 从((20230702201016-nrcyuiw "2待引用"))类型的文本中提取"2待引用"，无引号
+ */
+export function getAnchorFromMarkdown(markdown: string) {
+  let re = /(?<=\(\(.*? ").*?(?="\)\))/g;
+  return markdown.match(re);
+}

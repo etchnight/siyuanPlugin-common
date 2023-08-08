@@ -6,7 +6,20 @@
  * API 文档见 [API_zh_CN.md](https://github.com/siyuan-note/siyuan/blob/master/API_zh_CN.md)
  */
 
-import { fetchSyncPost, IWebSocketData } from "siyuan";
+declare global {
+  interface Window {
+    siyuan: Window_siyuan;
+    Lute: Lute;
+  }
+}
+import {
+  Dialog,
+  fetchSyncPost,
+  IMenuItemOption,
+  IObject,
+  IWebSocketData,
+  Lute,
+} from "siyuan";
 import {
   Notebook,
   NotebookConf,
@@ -21,6 +34,7 @@ import {
   BlockType,
   spanSqliteType,
   span,
+  Window_siyuan,
 } from "./types/siyuan-api";
 async function request(url: string, data: any) {
   let response: IWebSocketData = await fetchSyncPost(url, data);
@@ -824,6 +838,86 @@ export function getFocusNodeId(): string | null {
     return null;
   }
   return nodeId;
+}
+
+/**
+ * 在现有菜单中增加功能，纯前端功能，此函数应该只在插件中运行1次
+ * @param showCondition 当返回false时，不显示,items为现有菜单，
+ */
+export function addMenuItemOnExist(
+  item: IMenuItemOption,
+  showCondition: () => boolean
+) {
+  const menuNode = document.getElementById("commonMenu") as HTMLElement;
+  const config = { attributes: true, childList: true, subtree: false };
+  // 当观察到变动时执行的回调函数
+  const callback = function (mutationsList: MutationRecord[]) {
+    if (!showCondition()) {
+      return;
+    }
+    const menu = window.siyuan.menus.menu;
+    const itemEle = menu.addItem(item);
+    /*
+    const items = menuNode.querySelector(".b3-menu__items");
+    if (!items) {
+      return;
+    }
+    //不允许出现同label选项
+    for (let child of items.children) {
+      const label = child.querySelector(".b3-menu__label");
+      if (label?.textContent == item.label) {
+        return;
+      }
+    }
+    items.appendChild(itemEle);*/
+    //console.log(menu, mutationsList, itemEle);
+  };
+  const observer = new MutationObserver(callback);
+  observer.observe(menuNode, config);
+}
+
+export function getSelectDom() {
+  return document.querySelector(".protyle-wysiwyg--select");
+}
+
+export function showKarkdownInDialog(
+  kramdown: string,
+  dialogOpt: {
+    title?: string;
+    transparent?: boolean;
+    width?: string;
+    height?: string;
+    destroyCallback?: (options?: IObject) => void;
+    disableClose?: boolean;
+    disableAnimation?: boolean;
+  }
+) {
+  const lute = window.Lute.New();
+  const ele = lute.Md2BlockDOM(kramdown);
+  const content = ` <div class="b3-dialog__content">
+  <div class="protyle-wysiwyg protyle-wysiwyg--attr" style="height: 360px;">${ele}</div>
+</div>`;
+  let options: dialogOpt = {
+    title: dialogOpt.title,
+    transparent: dialogOpt.transparent,
+    content: content,
+    width: dialogOpt.width,
+    height: dialogOpt.height,
+    destroyCallback: dialogOpt.destroyCallback,
+    disableClose: dialogOpt.disableClose,
+    disableAnimation: dialogOpt.disableAnimation,
+  };
+  const dialog = new Dialog(options);
+}
+interface dialogOpt {
+  title?: string;
+  transparent?: boolean;
+  content: string;
+  width?: string;
+  height?: string;
+  destroyCallback?: (options?: IObject) => void;
+  disableClose?: boolean;
+  disableAnimation?: boolean;
 }
 
 //*静态方法

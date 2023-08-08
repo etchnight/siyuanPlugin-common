@@ -2,6 +2,8 @@
  * Copyright (c) 2023 frostime. All rights reserved.
  */
 
+import { Menu } from "siyuan";
+
 /**
  * Frequently used data structures in SiYuan
  */
@@ -147,7 +149,9 @@ export interface Window_siyuan {
     rightDock: jc;
     bottomDock: jc;
   };
-  menus: l_;
+  menus: {
+    menu: Menu;
+  };
   notebooks: Array;
   reqIds: any;
   shiftIsPressed: boolean;

@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.21",
-    "siyuan": "^0.7.4"
+    "siyuan": "^0.7.9"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195"

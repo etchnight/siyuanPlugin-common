@@ -926,6 +926,15 @@ const _common = 0;
  * 从((20230702201016-nrcyuiw "2待引用"))类型的文本中提取"2待引用"，无引号
  */
 export function getAnchorFromMarkdown(markdown: string) {
-  let re = /(?<=\(\(.*? ").*?(?="\)\))/g;
+  let re = /(?<=\(\([0-9]{14}-[a-zA-Z]{7} ").*?(?="\)\))/g;
+  return markdown.match(re);
+}
+
+/**
+ * 提取((20230702201016-nrcyuiw "2待引用"))中的id
+ */
+
+export function getIdFromMarkdown(markdown: string) {
+  let re = /(?<=\(\()[0-9]{14}-[a-zA-Z]{7}/g;
   return markdown.match(re);
 }

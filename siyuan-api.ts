@@ -923,18 +923,48 @@ interface dialogOpt {
 //*静态方法
 const _common = 0;
 /**
- * 从((20230702201016-nrcyuiw "2待引用"))类型的文本中提取"2待引用"，无引号
+ * 从((20230702201016-nr1yuiw "2待引用"))类型的文本中提取"2待引用"，无引号
  */
 export function getAnchorFromMarkdown(markdown: string) {
-  let re = /(?<=\(\([0-9]{14}-[a-zA-Z]{7} ").*?(?="\)\))/g;
+  let re = /(?<=\(\([0-9]{14}-[0-9a-zA-Z]{7} ").*?(?="\)\))/g;
   return markdown.match(re);
 }
 
 /**
- * 提取((20230702201016-nrcyuiw "2待引用"))中的id
+ * 提取((20230702201016-nr1yuiw "2待引用"))中的id
  */
 
 export function getIdFromMarkdown(markdown: string) {
-  let re = /(?<=\(\()[0-9]{14}-[a-zA-Z]{7}/g;
+  let re = /(?<=\(\()[0-9]{14}-[0-9a-zA-Z]{7}/g;
   return markdown.match(re);
+}
+
+/**
+ * 提取((20230702201016-nr1yuiw "2待引用"))中的((20230702201016-nr1yuiw "2待引用"))
+ */
+
+export function getCiteFromMarkdown(markdown: string) {
+  let re = /\(\([0-9]{14}-[0-9a-zA-Z]{7} ".*?"\)\)/g;
+  return markdown.match(re);
+}
+
+/**
+ * 将思源专有kramdown转化为markdown，目前仅有链接转换功能siyuan://blocks/20230416184252-4ikcvqu
+ */
+export function kramdown2markdown(kramdown: string) {
+  let cites = getCiteFromMarkdown(kramdown);
+  let markdown = kramdown;
+  if (cites) {
+    for (let cite of cites) {
+      let idList = getIdFromMarkdown(cite);
+      let anchorList = getAnchorFromMarkdown(cite);
+      if (idList && anchorList) {
+        markdown = markdown.replace(
+          cite,
+          `[${anchorList[0]}](siyuan://blocks/${idList[0]})`
+        );
+      }
+    }
+  }
+  return markdown;
 }

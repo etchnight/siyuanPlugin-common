@@ -876,8 +876,9 @@ export function addMenuItemOnExist(
   observer.observe(menuNode, config);
 }
 
+//非隐藏元素后代中选中的元素
 export function getSelectDom() {
-  return document.querySelector(".protyle-wysiwyg--select");
+  return document.querySelector(":not(.fn__none) .protyle-wysiwyg--select");
 }
 
 export function showKarkdownInDialog(

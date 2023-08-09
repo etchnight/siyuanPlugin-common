@@ -799,7 +799,8 @@ export enum typeAbbrMap {
 }
 
 /**
- * 获取当前光标所在块id，注意不是鼠标指针,这是一个纯前端方法
+ * @deprecated 该函数应该用eventBus代替
+ * @description 获取当前光标所在块id，注意不是鼠标指针,这是一个纯前端方法
  * 如果没有找到，则返回null
  * 这个函数不能在挂件中使用
  */
@@ -841,7 +842,8 @@ export function getFocusNodeId(): string | null {
 }
 
 /**
- * 在现有菜单中增加功能，纯前端功能，此函数应该只在插件中运行1次
+ * @deprecated 该函数应用eventBus代替
+ * @description 在现有菜单中增加功能，纯前端功能，此函数应该只在插件中运行1次
  * @param showCondition 当返回false时，不显示,items为现有菜单，
  */
 export function addMenuItemOnExist(

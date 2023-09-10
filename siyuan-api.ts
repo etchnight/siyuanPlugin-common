@@ -357,7 +357,7 @@ export async function getBlockById(
     }
   } catch (e) {
     console.warn(`未能找到id为${id}的块或文件夹，其可能是文档且无内容`);
-    console.error(e);
+    //console.error(e);
   }
   return null;
 }
@@ -570,7 +570,7 @@ export async function getParentBlock(block: {
   }
   return null;
 }
-function box2blockLike(box: ResGetNotebookConf) {
+function box2blockLike(box: { name: string; box: BlockId }) {
   let boxLikeBlock: Block = {
     content: box.name,
     id: box.box,
@@ -605,6 +605,20 @@ export async function getDescendantBlocks(id: string): Promise<Block[]> {
       )
     SELECT * FROM children_of `);
 }
+/**
+ * 递归查询祖先
+ * @returns 本级排在第一位，越向后层级越向上
+ */
+export async function getAncestorBlocks(id: string): Promise<Block[]> {
+  return await sql(`
+  WITH RECURSIVE
+  parent_of(id,parent_id,root_id,hash,box,path,hpath,name,alias,memo,tag,content,fcontent,markdown,length,type,subtype,ial,sort,created,updated,layer) AS(
+    SELECT blocks.*,0  FROM blocks WHERE blocks.id='${id}'
+    UNION
+    SELECT blocks.*,parent_of.layer+1 FROM blocks,parent_of WHERE blocks.id=parent_of.parent_id LIMIT 100
+    )
+  SELECT * FROM parent_of ORDER BY layer`);
+}
 export async function getRefBlocksWithRefmarkdown(id: string) {
   return await sql(`SELECT blocks.*,refs.markdown AS refmarkdown
     FROM blocks JOIN refs ON blocks.id=refs.def_block_id
@@ -612,7 +626,7 @@ export async function getRefBlocksWithRefmarkdown(id: string) {
     (SELECT def_block_id FROM refs WHERE block_id='${id}')
     AND refs.block_id='${id}'`);
 }
-export async function getRefBlocks(id: string) {
+export async function getRefBlocks(id: string): Promise<Block[]> {
   return await sql(`SELECT blocks.* FROM blocks WHERE blocks.id IN
     (SELECT def_block_id FROM refs WHERE block_id='${id}')`);
 }
@@ -623,7 +637,7 @@ export async function getDefBlocksWithRefmarkdown(id: string) {
   (SELECT block_id FROM refs WHERE def_block_id='${id}') 
   AND refs.def_block_id='${id}'`);
 }
-export async function getDefBlocks(id: string) {
+export async function getDefBlocks(id: string): Promise<Block[]> {
   return await sql(`SELECT blocks.* FROM blocks WHERE blocks.id IN
   (SELECT block_id FROM refs WHERE def_block_id='${id}') `);
 }
@@ -971,3 +985,217 @@ export function kramdown2markdown(kramdown: string) {
   }
   return markdown;
 }
+
+//*未在doc中写明的api
+const HIDDEN = 0;
+export async function getBlockBreadcrumb(id: BlockId): Promise<
+  {
+    id: BlockId;
+    name: string;
+    type: typeAbbrMap;
+    subType: BlockSubType;
+    children: null;
+  }[]
+> {
+  let url = "/api/block/getBlockBreadcrumb";
+  return request(url, { excludeTypes: [], id: id });
+}
+
+export class siyuanQueue {
+  //维护一个临时的block列表，每次需要查询block时首先尝试在此列表中取出
+  private blocksCache: Block[] = [];
+  //维护block之间的关系
+  private blocksRelas: blocksRela = {};
+  constructor() {}
+  public async getBlockById(id: string) {
+    let blockAdded = this.isInBlockList(id);
+    if (blockAdded) {
+      return blockAdded;
+    }
+    let newBlock = await getBlockById(id);
+    if (newBlock) {
+      this.blocksCache.push(newBlock);
+    }
+    return newBlock;
+  }
+  public async getChildrenBlocks(id: string) {
+    return (await this.getValue(
+      id,
+      "chileren",
+      null,
+      getChildrenBlocks,
+      null
+    )) as Block[];
+  }
+  public async getParentBlock(block: {
+    id: string;
+    parent_id?: BlockId;
+    type: string;
+    path: string;
+    box: string;
+  }) {
+    return (await this.getValue(
+      block.id,
+      "parent",
+      block,
+      null,
+      this.getParentBlockThis
+    )) as Block | null;
+  }
+  private async getParentBlockThis(block: {
+    parent_id?: BlockId;
+    type: string;
+    path: string;
+    box: string;
+  }): Promise<Block | null> {
+    let parent: Block | null = null;
+    //*普通块查parent
+    if (block.parent_id) {
+      parent = await this.getBlockById(block.parent_id);
+    }
+    if (parent) {
+      return parent;
+    }
+    //*文档查父级文档
+    if (block.type == "d") {
+      let pathList = block.path.split("/");
+      if (pathList.length > 2) {
+        parent = await this.getBlockById(pathList[pathList.length - 2]);
+      }
+    }
+    if (parent) {
+      return parent;
+    }
+    //*无父级文档查找box
+    if (block.box) {
+      const box = await getNotebookConf(block.box);
+      return box2blockLike(box);
+    }
+    return null;
+  }
+  public async getDefBlocks(id: string) {
+    return (await this.getValue(
+      id,
+      "def",
+      null,
+      getDefBlocks,
+      null
+    )) as Block[];
+  }
+  public async getRefBlocks(id: string) {
+    return (await this.getValue(
+      id,
+      "ref",
+      null,
+      getRefBlocks,
+      null
+    )) as Block[];
+  }
+  private isInBlockList(id: BlockId) {
+    return this.blocksCache.find((item) => {
+      return item.id == id;
+    });
+  }
+  /**
+   * 更新blocksCache，未找到会直接添加
+   * @param block
+   * @returns 若找到元素，则返回true，否则，返回false
+   */
+  private updateBlockList(block: Block) {
+    let index = this.blocksCache.findIndex((item) => {
+      return item.id === block.id;
+    });
+    if (index >= 0) {
+      this.blocksCache[index] = block;
+      return true;
+    } else {
+      this.blocksCache.push(block);
+      return false;
+    }
+  }
+  private async getValue(
+    id: BlockId,
+    key: string,
+    block: {
+      id: string;
+      parent_id?: BlockId;
+      type: string;
+      path: string;
+      box: string;
+    } | null,
+    callback1: ((arg: string) => Promise<Block[]>) | null,
+    callback2:
+      | ((arg: {
+          parent_id?: BlockId;
+          type: string;
+          path: string;
+          box: string;
+        }) => Promise<Block | null>)
+      | null
+  ): Promise<Block | Block[] | null> {
+    //console.log(this.blocksCache)
+    //console.log(this.blocksRelas)
+    console.log(key);
+    if (!id) {
+      return null;
+    }
+    if (!this.blocksRelas[id]) {
+      this.blocksRelas[id] = {};
+    } else {
+      let ids = this.blocksRelas[id][key];
+      if (ids) {
+        let result: Block | Block[] | null | undefined = [];
+        if (Array.isArray(ids)) {
+          result = this.blocksCache.filter((item) => {
+            return ids?.includes(item.id);
+          });
+          if (result.length === ids.length) {
+            return result;
+          }
+        } else {
+          result = this.isInBlockList(ids);
+          if (result) {
+            return result;
+          }
+        }
+      }
+    }
+    console.log("没找到", id);
+    let resultCall: Block | Block[] | null = [];
+    if (block && callback2) {
+      callback2 = callback2.bind(this);
+      resultCall = await callback2(block);
+    } else if (callback1) {
+      callback1 = callback1.bind(this);
+      resultCall = await callback1(id);
+    }
+    if (Array.isArray(resultCall)) {
+      this.blocksRelas[id][key] = [];
+      let value = this.blocksRelas[id][key] as BlockId[];
+      for (let child of resultCall) {
+        this.updateBlockList(child);
+        value.push(child.id);
+      }
+    } else if (resultCall) {
+      this.updateBlockList(resultCall);
+      this.blocksRelas[id][key] = resultCall.id;
+      if (id == resultCall.id) {
+        //调试
+        console.warn(resultCall);
+        console.log(this.blocksCache);
+        console.log(this.blocksRelas);
+        return null;
+      }
+    }
+    return resultCall;
+  }
+}
+type blocksRela = {
+  [id: BlockId]: {
+    ref?: BlockId[];
+    def?: BlockId[];
+    parent?: BlockId;
+    chileren?: BlockId[];
+    [key: string]: BlockId[] | BlockId | undefined | null;
+  };
+};

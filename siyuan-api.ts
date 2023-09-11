@@ -1133,9 +1133,6 @@ export class siyuanQueue {
         }) => Promise<Block | null>)
       | null
   ): Promise<Block | Block[] | null> {
-    //console.log(this.blocksCache)
-    //console.log(this.blocksRelas)
-    console.log(key);
     if (!id) {
       return null;
     }
@@ -1160,7 +1157,6 @@ export class siyuanQueue {
         }
       }
     }
-    console.log("没找到", id);
     let resultCall: Block | Block[] | null = [];
     if (block && callback2) {
       callback2 = callback2.bind(this);
@@ -1179,9 +1175,10 @@ export class siyuanQueue {
     } else if (resultCall) {
       this.updateBlockList(resultCall);
       this.blocksRelas[id][key] = resultCall.id;
-      if (id == resultCall.id) {
+      if (id === resultCall.id) {
+        console.warn(block);
         //调试
-        console.warn(resultCall);
+        console.log('resultCall',resultCall)
         console.log(this.blocksCache);
         console.log(this.blocksRelas);
         return null;

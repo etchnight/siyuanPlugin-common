@@ -645,38 +645,7 @@ export async function getTagsById(id: BlockId): Promise<span[]> {
   return await sql(`SELECT * FROM spans WHERE block_id='${id}' 
   AND type='textmark tag'`);
 }
-/**
- * @todo 该api未在文档中
- * @param id
- * @returns
- */
-export async function getDoc(id: string): Promise<getDocRes> {
-  const data = {
-    id: id,
-    k: "",
-    isBacklink: false,
-    mode: 0,
-    size: 48,
-  };
-  let json = await request("/api/filetree/getDoc", data);
-  return json;
-}
-interface getDocRes {
-  blockCount: number;
-  box: string;
-  content: string;
-  eof: boolean;
-  id: string;
-  isBacklinkExpand: boolean;
-  isSyncing: boolean;
-  mode: number;
-  parent2ID: string;
-  parentID: string;
-  path: string;
-  rootID: string;
-  scroll: boolean;
-  type: string;
-}
+
 /*
 export interface Block {
   id: string;
@@ -987,7 +956,7 @@ export function kramdown2markdown(kramdown: string) {
 }
 
 //*未在doc中写明的api
-const HIDDEN = 0;
+const _HIDDEN = 0;
 export async function getBlockBreadcrumb(id: BlockId): Promise<
   {
     id: BlockId;
@@ -1001,6 +970,46 @@ export async function getBlockBreadcrumb(id: BlockId): Promise<
   return request(url, { excludeTypes: [], id: id });
 }
 
+export async function getRefIDs(id: BlockId): Promise<{
+  defIDs: BlockId[];
+  refIDs: BlockId[];
+  refTexts: string[];
+}> {
+  let url = "/api/block/getRefIDs";
+  return request(url, { id: id });
+}
+
+/**
+ * @todo 该api未在文档中
+ * @param id
+ * @returns
+ */
+export async function getDoc(id: string): Promise<{
+  blockCount: number;
+  box: string;
+  content: string;
+  eof: boolean;
+  id: string;
+  isBacklinkExpand: boolean;
+  isSyncing: boolean;
+  mode: number;
+  parent2ID: string;
+  parentID: string;
+  path: string;
+  rootID: string;
+  scroll: boolean;
+  type: string;
+}> {
+  const data = {
+    id: id,
+    k: "",
+    isBacklink: false,
+    mode: 0,
+    size: 48,
+  };
+  let json = await request("/api/filetree/getDoc", data);
+  return json;
+}
 export class siyuanQueue {
   //维护一个临时的block列表，每次需要查询block时首先尝试在此列表中取出
   private blocksCache: Block[] = [];
@@ -1178,7 +1187,7 @@ export class siyuanQueue {
       if (id === resultCall.id) {
         console.warn(block);
         //调试
-        console.log('resultCall',resultCall)
+        console.log("resultCall", resultCall);
         console.log(this.blocksCache);
         console.log(this.blocksRelas);
         return null;
@@ -1196,3 +1205,4 @@ type blocksRela = {
     [key: string]: BlockId[] | BlockId | undefined | null;
   };
 };
+

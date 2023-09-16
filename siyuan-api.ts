@@ -7,11 +7,16 @@
  */
 
 declare global {
-  interface Window {
+  export interface Window {
     siyuan: Window_siyuan;
-    Lute: Lute;
+    Lute: typeof Lute;
   }
 }
+export interface Window {
+  siyuan: Window_siyuan;
+  Lute: typeof Lute;
+}
+
 import {
   Dialog,
   fetchSyncPost,
@@ -1205,4 +1210,3 @@ type blocksRela = {
     [key: string]: BlockId[] | BlockId | undefined | null;
   };
 };
-

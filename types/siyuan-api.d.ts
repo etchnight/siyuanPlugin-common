@@ -34,14 +34,17 @@ export type BlockType =
   | "d"
   | "s"
   | "h"
-  | "t"
+  | "t"//table 表格
+  | "l"//列表
+  | "m"//math 公式块
   | "i"
   | "p"
   | "f"
+  | "query_embed"//嵌入块
   | "audio"
   | "video"
   | "other"
-  | "box"; //!
+  | "box";
 
 export type BlockSubType =
   | "d1"

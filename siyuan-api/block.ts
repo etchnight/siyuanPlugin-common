@@ -29,22 +29,15 @@ export async function getParentNextChildID(
 }
 
 type DataType = "markdown" | "dom";
-export async function insertBlock(
-  dataType: DataType,
-  data: string,
-  nextID?: BlockId,
-  previousID?: BlockId,
-  parentID?: BlockId
-): Promise<IResdoOperations[]> {
-  if (!nextID && !previousID && !parentID) {
+export async function insertBlock(data: {
+  dataType: DataType;
+  data: string;
+  nextID?: BlockId;
+  previousID?: BlockId;
+  parentID?: BlockId;
+}): Promise<IResdoOperations[]> {
+  if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
   }
-  let resData: { [idx: string]: any } = {
-    dataType: dataType,
-    data: data,
-  };
-  nextID ? (resData.nextID = nextID) : null;
-  previousID ? (resData.previousID = previousID) : null;
-  parentID ? (resData.parentID = parentID) : null;
-  return request("/api/block/insertBlock", resData);
+  return request("/api/block/insertBlock", data);
 }

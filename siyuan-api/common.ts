@@ -1,4 +1,4 @@
-import { IWebSocketData, fetchSyncPost } from "siyuan";
+import { type IWebSocketData, fetchSyncPost } from "siyuan";
 
 export async function request(url: string, data: any) {
   let response: IWebSocketData = await fetchSyncPost(url, data);

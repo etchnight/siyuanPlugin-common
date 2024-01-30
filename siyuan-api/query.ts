@@ -1,3 +1,4 @@
+/**sqlite数据库查询相关 */
 import { request } from "./common";
 import { Block } from "../types/siyuan-api";
 

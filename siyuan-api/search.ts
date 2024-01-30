@@ -1,6 +1,11 @@
 import { Block } from "../types/siyuan-api";
 import { request } from "./common";
 
+/**
+ *
+ * @param k
+ * @returns tags返回的是html形式（带mark标签）
+ */
 export async function searchTag(
   k: string
 ): Promise<{ k: string; tags: string[] }> {

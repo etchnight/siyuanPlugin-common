@@ -6,10 +6,11 @@ async function requestQuerySQL(stmt: string): Promise<any[]> {
   return request("/api/query/sql", { stmt: stmt });
 }
 
-type BlockDes = Block & {
-  layer: number;
-};
-export async function queryDescendantBlocks(block: Block): Promise<BlockDes[]> {
+export async function queryDescendantBlocks(block: Block): Promise<
+  (Block & {
+    layer: number;
+  })[]
+> {
   let id = "";
   if (block.type == "p") {
     if (!block.parent_id) {
@@ -35,4 +36,11 @@ export async function queryBlocksByTag(tag: string): Promise<Block[]> {
     `SELECT * FROM blocks WHERE blocks.id IN
       (SELECT spans.block_id FROM spans WHERE spans.type LIKE '%tag%' AND content='${tag}')`
   );
+}
+
+export async function queryBlockById(id: string): Promise<Block | undefined> {
+  let blockList = await requestQuerySQL(
+    `SELECT * FROM blocks WHERE id='${id}'`
+  );
+  return blockList[0];
 }

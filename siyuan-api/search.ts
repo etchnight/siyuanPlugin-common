@@ -49,7 +49,7 @@ export enum ESearchGroupBy {
 }
 export type FullTextSearchBlockResult = Omit<
   Block,
-  "root_id" | "parent_id" | "hpath"
+  "root_id" | "parent_id" | "hpath" | "subtype"
 > & {
   rootID: string;
   parentID: string;
@@ -64,6 +64,7 @@ export type FullTextSearchBlockResult = Omit<
   riffCardID: string;
   riffCard: null; //todo
   hPath: string;
+  subType: string;
 };
 /**
  *

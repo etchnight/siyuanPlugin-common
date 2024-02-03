@@ -1,19 +1,26 @@
 {
-  "name": "siyuanPlugin-common",
+  "name": "siyuan-plugin-common",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "commit": "git add . && cz",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cz-conventional-changelog": "^3.3.0",
     "lodash": "^4.17.21",
     "siyuan": "^0.7.9"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.195"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2023 frostime. All rights reserved.
  */
 
-import { Menu } from "siyuan";
+import { Lute, Menu } from "siyuan";
 
 /**
  * Frequently used data structures in SiYuan
@@ -34,13 +34,13 @@ export type BlockType =
   | "d"
   | "s"
   | "h"
-  | "t"//table 表格
-  | "l"//列表
-  | "m"//math 公式块
+  | "t" //table 表格
+  | "l" //列表
+  | "m" //math 公式块
   | "i"
   | "p"
   | "f"
-  | "query_embed"//嵌入块
+  | "query_embed" //嵌入块
   | "audio"
   | "video"
   | "other"
@@ -124,44 +124,48 @@ export type doOperation = {
   previousID: BlockId;
   retData: null;
 };
-
-export interface Window_siyuan {
-  altIsPressed: boolean;
-  backStack: Array;
-  blockPanels: {
-    app: any;
-    defIds: BlockId[];
-    editors: any[];
-    element: HTMLElement;
-    id: string;
-    isBacklink: undefined | boolean;
-    nodeIds: BlockId[];
-    targetElement: undefined | HTMLElement;
-    x: number;
-    y: number;
-  }[];
-  config: any;
-  ctrlIsPressed: boolean;
-  dialogs: Array;
-  emojis: Array;
-  languages: any;
-  layout: {
-    layout: ue;
-    centerLayout: ue;
-    leftDock: jc;
-    rightDock: jc;
-    bottomDock: jc;
-  };
-  menus: {
-    menu: Menu;
-  };
-  notebooks: Array;
-  reqIds: any;
-  shiftIsPressed: boolean;
-  storage: any;
-  transactions: Array;
-  user: any;
-  ws: Ot;
+declare global {
+  interface window {
+    siyuan: {
+      altIsPressed: boolean;
+      backStack: Array;
+      blockPanels: {
+        app: any;
+        defIds: BlockId[];
+        editors: any[];
+        element: HTMLElement;
+        id: string;
+        isBacklink: undefined | boolean;
+        nodeIds: BlockId[];
+        targetElement: undefined | HTMLElement;
+        x: number;
+        y: number;
+      }[];
+      config: any;
+      ctrlIsPressed: boolean;
+      dialogs: Array;
+      emojis: Array;
+      languages: any;
+      layout: {
+        layout: ue;
+        centerLayout: ue;
+        leftDock: jc;
+        rightDock: jc;
+        bottomDock: jc;
+      };
+      menus: {
+        menu: Menu;
+      };
+      notebooks: Array;
+      reqIds: any;
+      shiftIsPressed: boolean;
+      storage: any;
+      transactions: Array;
+      user: any;
+      ws: Ot;
+    };
+    Lute: typeof Lute;
+  }
 }
 
 //todo 不全，以后再补

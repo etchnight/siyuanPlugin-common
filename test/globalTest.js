@@ -24,3 +24,4 @@ c2(no)->op2->e
 const lute = Lute.New();
 let dom = lute.Md2BlockDOM(md);
 console.log(dom);
+siyuan.layout.rightDock.data.outline.update({data:[]})

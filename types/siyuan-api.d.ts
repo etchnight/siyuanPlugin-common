@@ -82,6 +82,9 @@ export type BlockSubType =
   | "other"
   | "box"; //!
 
+/**
+ * 数据库查询返回该结果
+ */
 export type Block = {
   id: BlockId;
   parent_id?: BlockId;
@@ -105,6 +108,28 @@ export type Block = {
   created: string;
   updated: string;
 };
+/**
+ * 一些搜索类api会返回该 block 结果
+ */
+export type BlockTree = Omit<
+  Block,
+  "root_id" | "parent_id" | "hpath" | "subtype"
+> & {
+  rootID: string;
+  parentID: string;
+  folded: boolean;
+  refText: string;
+  refs: null; //todo
+  defID: string;
+  defPath: string;
+  children: Array<Block2>; 
+  depth: number;
+  count: number;
+  riffCardID: string;
+  riffCard: null; //todo
+  hPath: string;
+  subType: string;
+};
 type span = {
   block_id: BlockId;
   box: BlockId;
@@ -124,49 +149,49 @@ export type doOperation = {
   previousID: BlockId;
   retData: null;
 };
-declare global {
-  interface window {
-    siyuan: {
-      altIsPressed: boolean;
-      backStack: Array;
-      blockPanels: {
-        app: any;
-        defIds: BlockId[];
-        editors: any[];
-        element: HTMLElement;
-        id: string;
-        isBacklink: undefined | boolean;
-        nodeIds: BlockId[];
-        targetElement: undefined | HTMLElement;
-        x: number;
-        y: number;
-      }[];
-      config: any;
-      ctrlIsPressed: boolean;
-      dialogs: Array;
-      emojis: Array;
-      languages: any;
-      layout: {
-        layout: ue;
-        centerLayout: ue;
-        leftDock: jc;
-        rightDock: jc;
-        bottomDock: jc;
-      };
-      menus: {
-        menu: Menu;
-      };
-      notebooks: Array;
-      reqIds: any;
-      shiftIsPressed: boolean;
-      storage: any;
-      transactions: Array;
-      user: any;
-      ws: Ot;
+//declare global {
+export interface window {
+  siyuan: {
+    altIsPressed: boolean;
+    backStack: Array;
+    blockPanels: {
+      app: any;
+      defIds: BlockId[];
+      editors: any[];
+      element: HTMLElement;
+      id: string;
+      isBacklink: undefined | boolean;
+      nodeIds: BlockId[];
+      targetElement: undefined | HTMLElement;
+      x: number;
+      y: number;
+    }[];
+    config: any;
+    ctrlIsPressed: boolean;
+    dialogs: Array;
+    emojis: Array;
+    languages: any;
+    layout: {
+      layout: ue;
+      centerLayout: ue;
+      leftDock: jc;
+      rightDock: jc;
+      bottomDock: jc;
     };
-    Lute: typeof Lute;
-  }
+    menus: {
+      menu: Menu;
+    };
+    notebooks: Array;
+    reqIds: any;
+    shiftIsPressed: boolean;
+    storage: any;
+    transactions: Array;
+    user: any;
+    ws: Ot;
+  };
+  Lute: typeof Lute;
 }
+//}
 
 //todo 不全，以后再补
 export type spanSqliteType =

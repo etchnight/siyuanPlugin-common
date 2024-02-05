@@ -1,4 +1,4 @@
-import { type Block } from "../types/siyuan-api";
+import { type Block, BlockTree } from "../types/siyuan-api";
 import { request } from "./common";
 
 /**
@@ -47,25 +47,7 @@ export enum ESearchGroupBy {
   "不分组",
   "按文档分组",
 }
-export type FullTextSearchBlockResult = Omit<
-  Block,
-  "root_id" | "parent_id" | "hpath" | "subtype"
-> & {
-  rootID: string;
-  parentID: string;
-  folded: boolean;
-  refText: string;
-  refs: null; //todo
-  defID: string;
-  defPath: string;
-  children: null; //todo
-  depth: number;
-  count: number;
-  riffCardID: string;
-  riffCard: null; //todo
-  hPath: string;
-  subType: string;
-};
+
 /**
  *
  * @param query 查询关键词或表达式
@@ -83,7 +65,7 @@ export async function fullTextSearchBlock(
   orderBy: ESearchOrderBy,
   groupBy: ESearchGroupBy
 ): Promise<{
-  blocks: Array<FullTextSearchBlockResult>;
+  blocks: Array<BlockTree>;
   matchedBlockCount: number;
   matchedRootCount: number;
   pageCount: number;
@@ -135,7 +117,7 @@ export async function searchRefBlock(data: {
   rootID: string;
   isSquareBrackets?: boolean;
 }): Promise<{
-  blocks: Array<FullTextSearchBlockResult>;
+  blocks: Array<BlockTree>;
   k: string;
   newDoc: boolean;
   reqId: number; //new Date().getTime();

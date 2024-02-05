@@ -19,17 +19,30 @@ const fetchSyncPost = async (url, data) => {
     const res = await fetch(url, init);
     const res2 = (await res.json());
     //processMessage(res2);
-    //console.log(res2)
+    //console.log(res2) 
     return res2;
 };
+const request = async (url, data) => {
+    let response = await fetchSyncPost(url, data);
+    if (response.code !== 0) {
+        console.warn(response);
+    }
+    let res = response.code === 0 ? response.data : null;
+    return res;
+}
 
-async function test() {
-    const res = await fetchSyncPost("/api/outline/getDocOutline", {
-        id: "20230329233560-dc21eap",
+const getDocOutline = async (id) => {
+    id = "20230329233560-dc21eap"
+    return request("/api/outline/getDocOutline", {
+        id: id,
     });
+}
+
+
+const main = async () => {
+    let res = await getDocOutline()
     let res2 = JSON.stringify(res)
     console.log(res);
     fs.writeFileSync('./test/result.json', res2)
 }
-
-test();
+main();

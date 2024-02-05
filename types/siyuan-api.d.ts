@@ -142,7 +142,7 @@ export type BlockTree = Omit<
   refs: null; //todo
   defID: string;
   defPath: string;
-  children: Array<Block2>;
+  children: Array<BlockTree> | null;
   depth: number;
   count: number;
   riffCardID: string;

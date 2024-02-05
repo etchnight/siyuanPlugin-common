@@ -1,8 +1,8 @@
 /**sqlite数据库查询相关 */
 import { request } from "./common";
-import { Block } from "../types/siyuan-api";
+import { Block, BlockId } from "../types/siyuan-api";
 
-async function requestQuerySQL(stmt: string): Promise<any[]> {
+export async function requestQuerySQL(stmt: string): Promise<any[]> {
   return request("/api/query/sql", { stmt: stmt });
 }
 
@@ -31,6 +31,27 @@ export async function queryDescendantBlocks(block: Block): Promise<
   );
 }
 
+/**
+ *
+ * @param id
+ * @returns layer约大表示与该块的关系越远
+ */
+export async function queryAncestorBlocks(id: BlockId): Promise<
+  (Block & {
+    layer: number;
+  })[]
+> {
+  return requestQuerySQL(
+    `WITH RECURSIVE
+    parent_of(id,parent_id,root_id,hash,box,path,hpath,name,alias,memo,tag,content,fcontent,markdown,length,type,subtype,ial,sort,created,updated,layer) AS(
+      SELECT blocks.*,0  FROM blocks WHERE blocks.id='${id}'
+      UNION
+      SELECT blocks.*,parent_of.layer+1 FROM blocks,parent_of WHERE blocks.id=parent_of.parent_id LIMIT 100
+      )
+    SELECT * FROM parent_of ORDER BY layer`
+  );
+}
+
 export async function queryBlocksByTag(tag: string): Promise<Block[]> {
   return requestQuerySQL(
     `SELECT * FROM blocks WHERE blocks.id IN
@@ -41,6 +62,16 @@ export async function queryBlocksByTag(tag: string): Promise<Block[]> {
 export async function queryBlockById(id: string): Promise<Block | undefined> {
   let blockList = await requestQuerySQL(
     `SELECT * FROM blocks WHERE id='${id}'`
+  );
+  return blockList[0];
+}
+
+export async function queryRefBlockById(
+  id: string
+): Promise<Block | undefined> {
+  let blockList = await requestQuerySQL(
+    `SELECT blocks.* FROM blocks WHERE blocks.id IN
+    (SELECT def_block_id FROM refs WHERE block_id='${id}') `
   );
   return blockList[0];
 }

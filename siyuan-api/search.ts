@@ -1,4 +1,9 @@
-import { type Block, BlockTree } from "../types/siyuan-api";
+import {
+  type Block,
+  BlockTree,
+  NodeType,
+  BlockSubType,
+} from "../types/siyuan-api";
 import { request } from "./common";
 
 /**
@@ -124,3 +129,36 @@ export async function searchRefBlock(data: {
 }> {
   return request("/api/search/searchRefBlock", data);
 }
+
+/**
+ *
+ * @param embedBlockID 嵌入块的id
+ * @param excludeIDs 通常排除嵌入块本身和其所在文档id，没有嵌入块本身id会自动添加
+ * @param stmt 默认为select * from blocks where id='${data.embedBlockID}'
+ * @returns blockPaths为自上而下，从文档开始
+ */
+export const getEmbedBlock = async (data: {
+  embedBlockID: string;
+  stmt?: string;
+  headingMode: 0 | 1;
+  excludeIDs?: string[];
+  breadcrumb?: boolean;
+}): Promise<{
+  blocks: Array<{
+    block: BlockTree;
+    blockPaths: Array<{
+      id: string;
+      name: string;
+      type: NodeType;
+      subType: BlockSubType | "";
+      children: null | [];
+    }>;
+  }>;
+}> => {
+  data.stmt =
+    data.stmt || `select * from blocks where id='${data.embedBlockID}'`;
+  if (data.excludeIDs?.includes(data.embedBlockID)) {
+    data.excludeIDs.push(data.embedBlockID);
+  }
+  return request("/api/search/searchEmbedBlock", data);
+};

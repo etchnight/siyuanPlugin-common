@@ -46,6 +46,26 @@ export type BlockType =
   | "other"
   | "box";
 
+export type NodeType =
+  | "NodeDocument"
+  | "NodeThematicBreak"
+  | "NodeParagraph"
+  | "NodeBlockquote"
+  | "NodeList"
+  | "NodeListItem"
+  | "NodeCodeBlock"
+  | "NodeYamlFrontMatter"
+  | "NodeTable"
+  | "NodeBlockQueryEmbed"
+  | "NodeSuperBlock"
+  | "NodeMathBlock"
+  | "NodeHTMLBlock"
+  | "NodeWidget"
+  | "NodeIFrame"
+  | "NodeVideo"
+  | "NodeAudio"
+  | "NodeAttributeView";
+
 export type BlockSubType =
   | "d1"
   | "d2"
@@ -122,7 +142,7 @@ export type BlockTree = Omit<
   refs: null; //todo
   defID: string;
   defPath: string;
-  children: Array<Block2>; 
+  children: Array<Block2>;
   depth: number;
   count: number;
   riffCardID: string;
@@ -130,6 +150,14 @@ export type BlockTree = Omit<
   hPath: string;
   subType: string;
 };
+export interface Ial {
+  alias?: string;
+  bookmark?: string;
+  id?: string;
+  memo?: string;
+  name?: string;
+  updated?: string;
+}
 type span = {
   block_id: BlockId;
   box: BlockId;

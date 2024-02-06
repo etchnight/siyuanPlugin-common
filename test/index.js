@@ -44,13 +44,9 @@ const request = async (url, data) => {
 };
 
 const getEmbedBlock = async () => {
-  return request("/api/search/searchEmbedBlock", {
-    embedBlockID: "20240205184718-6132dkz",
-    stmt: "select * from blocks where id='20240130230704-f54ujx6'",
-    headingMode: 0,
-    excludeIDs: ["20240205184718-6132dkz", "20240129090734-enoz1rj"],
-    breadcrumb: true,
-  });
+  return request("/api/outline/getDocOutline", {
+   id:'20240202172249-9l1gp4f'
+  }); 
 };
 
 const main = async () => {

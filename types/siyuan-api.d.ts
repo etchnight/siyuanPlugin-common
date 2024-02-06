@@ -178,6 +178,7 @@ export type doOperation = {
   previousID: BlockId;
   retData: null;
 };
+
 //declare global {
 export interface window {
   siyuan: {

@@ -758,33 +758,7 @@ export async function getDom(
   return dom;
 }
 
-//\kernel\treenode\node.go(翻转)
-export enum ETypeAbbrMap {
-  // 块级元素
-  d = "NodeDocument",
-  h = "NodeHeading",
-  l = "NodeList",
-  i = "NodeListItem",
-  c = "NodeCodeBlock",
-  m = "NodeMathBlock",
-  t = "NodeTable",
-  b = "NodeBlockquote",
-  s = "NodeSuperBlock",
-  p = "NodeParagraph",
-  html = "NodeHTMLBlock",
-  query_embed = "NodeBlockQueryEmbed",
-  ial = "NodeKramdownBlockIAL",
-  iframe = "NodeIFrame",
-  widget = "NodeWidget",
-  tb = "NodeThematicBreak",
-  video = "NodeVideo",
-  audio = "NodeAudio",
-  text = "NodeText",
-  img = "NodeImage",
-  link_text = "NodeLinkText",
-  link_dest = "NodeLinkDest",
-  textmark = "NodeTextMark",
-}
+
 
 /**
  * @deprecated 该函数应该用eventBus代替

@@ -15,7 +15,7 @@ export type DocOutline = {
   updated?: string;
   created?: string;
 };
-export const getDocOutline = async (id: BlockId): Promise<DocOutline> => {
+export const getDocOutline = async (id: BlockId): Promise<DocOutline[]> => {
   return request("/api/outline/getDocOutline", {
     id: id,
   });

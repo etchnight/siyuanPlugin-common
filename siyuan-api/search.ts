@@ -134,12 +134,12 @@ export async function searchRefBlock(data: {
  *
  * @param embedBlockID 嵌入块的id
  * @param excludeIDs 通常排除嵌入块本身和其所在文档id，没有嵌入块本身id会自动添加
- * @param stmt 默认为select * from blocks where id='${data.embedBlockID}'
+ * @param stmt 一般为为select * from blocks where id='引用的id'
  * @returns blockPaths为自上而下，从文档开始
  */
-export const getEmbedBlock = async (data: {
+export const searchEmbedBlock = async (data: {
   embedBlockID: string;
-  stmt?: string;
+  stmt: string;
   headingMode: 0 | 1;
   excludeIDs?: string[];
   breadcrumb?: boolean;
@@ -155,8 +155,6 @@ export const getEmbedBlock = async (data: {
     }>;
   }>;
 }> => {
-  data.stmt =
-    data.stmt || `select * from blocks where id='${data.embedBlockID}'`;
   if (data.excludeIDs?.includes(data.embedBlockID)) {
     data.excludeIDs.push(data.embedBlockID);
   }

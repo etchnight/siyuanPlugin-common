@@ -133,7 +133,7 @@ export type Block = {
  */
 export type BlockTree = Omit<
   Block,
-  "root_id" | "parent_id" | "hpath" | "subtype"
+  "root_id" | "parent_id" | "hpath" | "subtype" | "type"
 > & {
   rootID: string;
   parentID: string;
@@ -142,13 +142,14 @@ export type BlockTree = Omit<
   refs: null; //todo
   defID: string;
   defPath: string;
-  children: Array<Block2>;
+  children: Array<BlockTree> | null;
   depth: number;
   count: number;
   riffCardID: string;
   riffCard: null; //todo
   hPath: string;
   subType: string;
+  type: ETypeAbbrMap;
 };
 export interface Ial {
   alias?: string;
@@ -177,6 +178,7 @@ export type doOperation = {
   previousID: BlockId;
   retData: null;
 };
+
 //declare global {
 export interface window {
   siyuan: {
@@ -231,3 +233,31 @@ export type spanSqliteType =
   | "textmark mark"
   | "textmark kbd"
   | "textmark code";
+
+//\kernel\treenode\node.go(翻转)
+export enum ETypeAbbrMap {
+  // 块级元素
+  d = "NodeDocument",
+  h = "NodeHeading",
+  l = "NodeList",
+  i = "NodeListItem",
+  c = "NodeCodeBlock",
+  m = "NodeMathBlock",
+  t = "NodeTable",
+  b = "NodeBlockquote",
+  s = "NodeSuperBlock",
+  p = "NodeParagraph",
+  html = "NodeHTMLBlock",
+  query_embed = "NodeBlockQueryEmbed",
+  ial = "NodeKramdownBlockIAL",
+  iframe = "NodeIFrame",
+  widget = "NodeWidget",
+  tb = "NodeThematicBreak",
+  video = "NodeVideo",
+  audio = "NodeAudio",
+  text = "NodeText",
+  img = "NodeImage",
+  link_text = "NodeLinkText",
+  link_dest = "NodeLinkDest",
+  textmark = "NodeTextMark",
+}

@@ -759,7 +759,7 @@ export async function getDom(
 }
 
 //\kernel\treenode\node.go(翻转)
-export enum typeAbbrMap {
+export enum ETypeAbbrMap {
   // 块级元素
   d = "NodeDocument",
   h = "NodeHeading",

@@ -75,3 +75,22 @@ export async function queryRefBlockById(
   );
   return blockList[0];
 }
+
+export async function queryRefInfoById(id: BlockId): Promise<
+  {
+    id: BlockId;
+    def_block_id: BlockId;
+    def_block_parent_id: BlockId;
+    def_block_root_id: BlockId;
+    def_block_path: string;
+    block_id: BlockId;
+    root_id: BlockId;
+    box: BlockId;
+    path: string;
+    content: string;
+    markdown: string;
+    type: "textmark" | "query_embed";
+  }[]
+> {
+  return requestQuerySQL(`SELECT * FROM refs WHERE block_id='${id}'`);
+}

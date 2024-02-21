@@ -6,6 +6,23 @@ export async function requestQuerySQL(stmt: string): Promise<any[]> {
   return request("/api/query/sql", { stmt: stmt });
 }
 
+/**
+ *
+ * @param id
+ * @returns 返回直接子级块
+ */
+export async function queryChildBlocks(id: BlockId): Promise<Block[]> {
+  return requestQuerySQL(
+    `SELECT blocks.* FROM blocks WHERE blocks.parent_id='${id}' LIMIT 1000`
+  );
+}
+
+export async function queryFirstChildBlock(block: Block): Promise<Block> {
+  let children = await queryChildBlocks(block.id);
+  return children.find((e) => {
+    return e.content === block.fcontent;
+  });
+}
 export async function queryDescendantBlocks(block: Block): Promise<
   (Block & {
     layer: number;

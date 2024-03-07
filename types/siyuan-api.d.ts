@@ -129,6 +129,24 @@ export type Block = {
   updated: string;
 };
 /**
+ * 数据库refs表查询返回该结果
+ */
+export type Ref = {
+  id: BlockId;
+  def_block_id: BlockId;
+  def_block_parent_id: BlockId;
+  def_block_root_id: BlockId;
+  def_block_path: string;
+  block_id: BlockId;
+  root_id: BlockId;
+  box: BlockId;
+  path: string;
+  content: string;
+  markdown: string;
+  type: "textmark" | "query_embed";
+};
+
+/**
  * 一些搜索类api会返回该 block 结果
  */
 export type BlockTree = Omit<

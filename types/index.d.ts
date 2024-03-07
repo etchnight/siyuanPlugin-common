@@ -1,4 +1,4 @@
-//*copy from siyuan\app\src\types\protyle.d.ts
+//*copy from siyuan\app\src\types\index.d.ts
 
 type TLayout = "normal" | "bottom" | "left" | "right" | "center"
 type TSearchFilter = "mathBlock" | "table" | "blockquote" | "superBlock" | "paragraph" | "document" | "heading"

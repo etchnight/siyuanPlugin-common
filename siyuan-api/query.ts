@@ -1,6 +1,6 @@
 /**sqlite数据库查询相关 */
 import { request } from "./common";
-import { Block, BlockId } from "../types/siyuan-api";
+import { Block, BlockId, Ref } from "../types/siyuan-api";
 
 export async function requestQuerySQL(stmt: string): Promise<any[]> {
   return request("/api/query/sql", { stmt: stmt });
@@ -93,21 +93,10 @@ export async function queryRefBlockById(
   return blockList[0];
 }
 
-export async function queryRefInfoById(id: BlockId): Promise<
-  {
-    id: BlockId;
-    def_block_id: BlockId;
-    def_block_parent_id: BlockId;
-    def_block_root_id: BlockId;
-    def_block_path: string;
-    block_id: BlockId;
-    root_id: BlockId;
-    box: BlockId;
-    path: string;
-    content: string;
-    markdown: string;
-    type: "textmark" | "query_embed";
-  }[]
-> {
+export async function queryRefInfoById(id: BlockId): Promise<Ref[]> {
   return requestQuerySQL(`SELECT * FROM refs WHERE block_id='${id}'`);
+}
+
+export async function queryDefInfoById(defId: BlockId): Promise<Ref[]> {
+  return requestQuerySQL(`SELECT * FROM refs WHERE def_block_id='${defId}'`);
 }

@@ -47,24 +47,30 @@ export type BlockType =
   | "box";
 
 export type NodeType =
+  | "NodeAttributeView"
   | "NodeDocument"
-  | "NodeThematicBreak"
-  | "NodeParagraph"
-  | "NodeBlockquote"
+  | "NodeHeading"
   | "NodeList"
   | "NodeListItem"
   | "NodeCodeBlock"
-  | "NodeYamlFrontMatter"
-  | "NodeTable"
-  | "NodeBlockQueryEmbed"
-  | "NodeSuperBlock"
   | "NodeMathBlock"
+  | "NodeTable"
+  | "NodeBlockquote"
+  | "NodeSuperBlock"
+  | "NodeParagraph"
   | "NodeHTMLBlock"
-  | "NodeWidget"
+  | "NodeBlockQueryEmbed"
+  | "NodeKramdownBlockIAL"
   | "NodeIFrame"
+  | "NodeWidget"
+  | "NodeThematicBreak"
   | "NodeVideo"
   | "NodeAudio"
-  | "NodeAttributeView";
+  | "NodeText"
+  | "NodeImage"
+  | "NodeLinkText"
+  | "NodeLinkDest"
+  | "NodeTextMark";
 
 export type BlockSubType =
   | "d1"

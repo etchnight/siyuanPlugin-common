@@ -85,12 +85,12 @@ export async function queryBlockById(id: string): Promise<Block | undefined> {
 
 export async function queryRefBlockById(
   id: string
-): Promise<Block | undefined> {
+): Promise<Block[] | undefined> {
   let blockList = await requestQuerySQL(
     `SELECT blocks.* FROM blocks WHERE blocks.id IN
     (SELECT def_block_id FROM refs WHERE block_id='${id}') `
   );
-  return blockList[0];
+  return blockList;
 }
 
 export async function queryRefInfoById(id: BlockId): Promise<Ref[]> {

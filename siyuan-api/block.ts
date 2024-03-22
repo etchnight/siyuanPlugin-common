@@ -1,7 +1,7 @@
 import { DocumentId, BlockId } from "../types/siyuan-api";
 import { request } from "./common";
 
-interface IResdoOperations {
+export interface IResdoOperations {
   doOperations: doOperation[];
   undoOperations: doOperation[] | null;
 }
@@ -40,4 +40,33 @@ export async function insertBlock(data: {
     console.error(`insertBlock缺少参数id`);
   }
   return request("/api/block/insertBlock", data);
+}
+
+export async function updateBlock(data: {
+  dataType: DataType;
+  data: string;
+  id: string;
+}): Promise<IResdoOperations[]> {
+  return request("/api/block/updateBlock", data);
+}
+
+export async function deleteBlock(data: {
+  id: string;
+}): Promise<IResdoOperations[]> {
+  return request("/api/block/deleteBlock", data);
+}
+
+/**
+ *
+ * @param parentID 父块的 ID，用于锚定插入位置，previousID 和 parentID 不能同时为空，同时存在的话优先使用 previousID
+ */
+export async function moveBlock(data: {
+  id: string;
+  previousID: string;
+  parentID: string;
+}): Promise<IResdoOperations[]> {
+  if (!data.previousID && !data.parentID) {
+    console.error(`moveBlock缺少参数id`);
+  }
+  return request("/api/block/moveBlock", data);
 }

@@ -110,6 +110,7 @@ export type BlockSubType =
 
 /**
  * 数据库查询返回该结果
+ * @ial {: [key: string]: string };
  */
 export type Block = {
   id: BlockId;
@@ -129,7 +130,7 @@ export type Block = {
   length: number;
   type: BlockType;
   subtype: BlockSubType;
-  ial?: { [key: string]: string };
+  ial?: string; //{ [key: string]: string };
   sort: number;
   created: string;
   updated: string;

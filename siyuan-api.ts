@@ -758,8 +758,6 @@ export async function getDom(
   return dom;
 }
 
-
-
 /**
  * @deprecated 该函数应该用eventBus代替
  * @description 获取当前光标所在块id，注意不是鼠标指针,这是一个纯前端方法
@@ -958,37 +956,6 @@ export async function getRefIDs(id: BlockId): Promise<{
   return request(url, { id: id });
 }
 
-/**
- * @todo 该api未在文档中
- * @param id
- * @returns
- */
-export async function getDoc(id: string): Promise<{
-  blockCount: number;
-  box: string;
-  content: string;
-  eof: boolean;
-  id: string;
-  isBacklinkExpand: boolean;
-  isSyncing: boolean;
-  mode: number;
-  parent2ID: string;
-  parentID: string;
-  path: string;
-  rootID: string;
-  scroll: boolean;
-  type: string;
-}> {
-  const data = {
-    id: id,
-    k: "",
-    isBacklink: false,
-    mode: 0,
-    size: 48,
-  };
-  let json = await request("/api/filetree/getDoc", data);
-  return json;
-}
 export class siyuanQueue {
   //维护一个临时的block列表，每次需要查询block时首先尝试在此列表中取出
   private blocksCache: Block[] = [];
@@ -1185,4 +1152,3 @@ type blocksRela = {
   };
 };
 export { BlockId, request };
-

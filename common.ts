@@ -75,8 +75,4 @@ export const getIconByType = (type: string, sub?: string) => {
   return iconName;
 };
 
-export const isBlock = (value: string) => {
-  const reg = new RegExp("^[0-9]{14}-[0-9a-z]{7}$");
-  return reg.test(value);
-};
 

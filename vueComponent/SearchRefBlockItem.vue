@@ -12,14 +12,7 @@
         style="position: absolute; margin-top: 8px; top: 0px"
       >
         <use
-          :xlink:href="
-            '#' +
-            getIconByType(
-              props.item.type,
-              //@ts-ignore
-              props.item.subType || props.item.subtype
-            )
-          "
+          :xlink:href="'#' + getIconByType(props.item.type, props.item.subType)"
         ></use>
       </svg>
       <span
@@ -56,18 +49,15 @@
       </span>
     </div>
     <div class="b3-list-item__meta b3-list-item__showall">
-      {{
-        //@ts-ignore
-        props.item.hPath || props.item.hpath
-      }}
+      {{ props.item.hPath }}
     </div>
   </button>
 </template>
 <script setup lang="ts">
 import { getIconByType } from "../common";
-import { Block, BlockTree } from "../types/siyuan-api";
+import { BlockTree } from "../types/siyuan-api";
 
 const props = defineProps<{
-  item: BlockTree | Block;
+  item: BlockTree;
 }>();
 </script>

@@ -12,10 +12,23 @@
       <SearchRefBlockItem :item="item" />
     </template>
   </el-autocomplete>
+  <el-button
+    :icon="RefreshLeft"
+    type="info"
+    circle
+    @click="
+      () => {
+        selected = false;
+        state = '';
+      }
+    "
+  />
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { RefreshLeft } from "@element-plus/icons-vue";
+
 import SearchRefBlockItem from "./SearchRefBlockItem.vue";
 import {
   fullTextSearchBlock,
@@ -24,8 +37,13 @@ import {
   ESearchGroupBy,
   ESearchOrderBy,
 } from "../siyuan-api/search";
+import { requestQuerySQL } from "../siyuan-api/query";
 import { Block, BlockTree } from "../types/siyuan-api";
-const state = ref("");
+import { block2blockTree } from "../siyuan-api/common";
+/**
+ * 可以在父组件中显示的文本
+ */
+const state = defineModel("state");
 const selected = ref(false);
 const emit = defineEmits<{
   (e: "update", block: BlockAC): void;
@@ -33,7 +51,7 @@ const emit = defineEmits<{
 //const tagsRef = ref([]);
 let blocks: BlockAC[] = [];
 
-export type BlockAC = (BlockTree | Block) & {
+export type BlockAC = BlockTree & {
   value: string;
   contentCleared: string;
 };
@@ -69,33 +87,37 @@ const querySearchAsync = async (
     }
     types.heading = true;
   }
-  /*   if (isBlock(queryString)) {
-    const res = await queryBlockById(queryString);
-    blocks = [{ ...res, value: res.id, contentCleared: res.content }];
-  } */
-
-  const res = await fullTextSearchBlock(
-    queryString,
-    ESearchMethod.keyword,
-    types,
-    [],
-    ESearchOrderBy.类型,
-    ESearchGroupBy.不分组
-  );
-  const sortSubTypeList = ["h1", "h2", "h3", "h4", "h5", "h6"];
-  const sortFun = (e: string) => {
-    return sortSubTypeList.indexOf(e) < 0
-      ? sortSubTypeList.length + 1
-      : sortSubTypeList.indexOf(e);
-  };
-  res.blocks.sort((a, b) => {
-    return sortFun(a.subType) - sortFun(b.subType);
-  });
-  for (let block of res.blocks) {
-    blocks.push({
-      ...block,
-      value: block.id,
-      contentCleared: block.content.replace(/<mark>(.*?)<\/mark>/, "$1"),
+  if (!queryString) {
+    const res = (await requestQuerySQL(
+      "SELECT * FROM blocks  ORDER  BY updated  DESC  LIMIT 10"
+    )) as Block[];
+    blocks = res.map((e) => {
+      return { ...block2blockTree(e), contentCleared: e.content, value: e.id };
+    });
+  } else {
+    const res = await fullTextSearchBlock(
+      queryString,
+      ESearchMethod.keyword,
+      types,
+      [],
+      ESearchOrderBy.类型,
+      ESearchGroupBy.不分组
+    );
+    const sortSubTypeList = ["h1", "h2", "h3", "h4", "h5", "h6"];
+    const sortFun = (e: string) => {
+      return sortSubTypeList.indexOf(e) < 0
+        ? sortSubTypeList.length + 1
+        : sortSubTypeList.indexOf(e);
+    };
+    res.blocks.sort((a, b) => {
+      return sortFun(a.subType) - sortFun(b.subType);
+    });
+    blocks = res.blocks.map((block) => {
+      return {
+        ...block,
+        value: block.id,
+        contentCleared: block.content.replace(/<mark>(.*?)<\/mark>/, "$1"),
+      };
     });
   }
   cb(blocks);

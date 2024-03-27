@@ -17,7 +17,9 @@ export async function queryChildBlocks(id: BlockId): Promise<Block[]> {
   );
 }
 
-export async function queryFirstChildBlock(block: Block): Promise<Block> {
+export async function queryFirstChildBlock(
+  block: Block
+): Promise<Block | undefined> {
   let children = await queryChildBlocks(block.id);
   return children.find((e) => {
     return e.content === block.fcontent;

@@ -55,7 +55,7 @@ export enum ESearchGroupBy {
 
 /**
  *
- * @param query 查询关键词或表达式
+ * @param query 查询关键词或表达式，似乎支持id搜索
  * @param method
  * @param types 默认全选，仅需要标明哪些是false
  * @param paths 'xxx.sy'形式，空为查询所有

@@ -32,3 +32,15 @@ export async function getDoc(data: {
   }
   return request("/api/filetree/getDoc", data);
 }
+
+export async function duplicateDoc(id: BlockId): Promise<{
+  hPath: string;
+  id: BlockId;
+  notebook: BlockId;
+  path: string;
+}> {
+  if (!isBlock(id)) {
+    throw `duplicateDoc 输入参数不是BlockId!`;
+  }
+  return request("/api/filetree/duplicateDoc", { id: id });
+}

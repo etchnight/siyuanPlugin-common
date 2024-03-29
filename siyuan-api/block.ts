@@ -1,20 +1,7 @@
+import { IOperation } from "siyuan";
 import { DocumentId, BlockId } from "../types/siyuan-api";
 import { getBlockAttrs, setBlockAttrs } from "./attr";
 import { request } from "./common";
-
-export interface IResdoOperations {
-  doOperations: doOperation[];
-  undoOperations: doOperation[] | null;
-}
-
-type doOperation = {
-  action: string;
-  data: string;
-  id: BlockId;
-  parentID: BlockId | DocumentId;
-  previousID: BlockId;
-  retData: null;
-};
 
 /**
  * @description 返回的值不是父级的第一个子块，目前作用未知
@@ -36,7 +23,7 @@ export async function insertBlock(data: {
   nextID?: BlockId;
   previousID?: BlockId;
   parentID?: BlockId;
-}): Promise<IResdoOperations[]> {
+}): Promise<IOperation[]> {
   if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
   }

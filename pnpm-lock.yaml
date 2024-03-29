@@ -8,17 +8,9 @@ dependencies:
   cz-conventional-changelog:
     specifier: ^3.3.0
     version: 3.3.0(@types/node@20.11.16)(typescript@5.3.3)
-  lodash:
-    specifier: ^4.17.21
-    version: 4.17.21
   siyuan:
-    specifier: ^0.7.9
-    version: 0.7.9
-
-devDependencies:
-  '@types/lodash':
-    specifier: ^4.14.195
-    version: 4.14.195
+    specifier: ^0.9.6
+    version: 0.9.6
 
 packages:
 
@@ -111,10 +103,6 @@ packages:
       chalk: 4.1.2
     dev: false
     optional: true
-
-  /@types/lodash@4.14.195:
-    resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
-    dev: true
 
   /@types/node@20.11.16:
     resolution: {integrity: sha512-gKb0enTmRCzXSSUJDq6/sPcqrfCv2mkkG6Jt/clpn5eiCbKTY+SgZUxo+p8ZKMof5dCp9vHQUAB7wOUTod22wQ==}
@@ -932,8 +920,8 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: false
 
-  /siyuan@0.7.9:
-    resolution: {integrity: sha512-X5olBQhfkgyPRF+d8agpcbAaFnCSvSkN3LWX7XU9jApmCfpJ/4PAmK7mKPfR1YGBpjFLRa/xTrv11BQ3hxN15Q==}
+  /siyuan@0.9.6:
+    resolution: {integrity: sha512-MasF1bxkhEoX7Lk/aJm+AYI7lkX7FeTSTF98dKV8v2q0Y0JbVdPY2GB3Wb9Sv5AXm1Q9KEVyCAhRyywv0s9WBw==}
     dev: false
 
   /string-width@4.2.3:

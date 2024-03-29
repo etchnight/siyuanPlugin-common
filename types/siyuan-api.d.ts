@@ -3,7 +3,7 @@
  */
 
 import { Lute, Menu } from "siyuan";
-
+import { ETypeAbbrMap } from "../siyuan-api/common";
 /**
  * Frequently used data structures in SiYuan
  */
@@ -32,19 +32,24 @@ export type NotebookConf = {
 
 export type BlockType =
   | "d"
-  | "s"
   | "h"
-  | "t" //table 表格
-  | "l" //列表
-  | "m" //math 公式块
+  | "l"
   | "i"
+  | "c"
+  | "m"
+  | "t"
+  | "b"
+  | "s"
   | "p"
-  | "f"
-  | "query_embed" //嵌入块
-  | "audio"
+  | "html"
+  | "query_embed"
+  | "av"
+  | "ial"
+  | "iframe"
+  | "widget"
+  | "tb"
   | "video"
-  | "other"
-  | "box";
+  | "audio";
 
 export type NodeType =
   | "NodeAttributeView"
@@ -110,6 +115,7 @@ export type BlockSubType =
 
 /**
  * 数据库查询返回该结果
+ * @ial {: [key: string]: string };
  */
 export type Block = {
   id: BlockId;
@@ -129,7 +135,7 @@ export type Block = {
   length: number;
   type: BlockType;
   subtype: BlockSubType;
-  ial?: { [key: string]: string };
+  ial?: string; //{ [key: string]: string };
   sort: number;
   created: string;
   updated: string;
@@ -160,7 +166,7 @@ export type BlockTree = Omit<
   "root_id" | "parent_id" | "hpath" | "subtype" | "type"
 > & {
   rootID: string;
-  parentID: string;
+  parentID?: string;
   folded: boolean;
   refText: string;
   refs: null; //todo
@@ -259,29 +265,4 @@ export type spanSqliteType =
   | "textmark code";
 
 //\kernel\treenode\node.go(翻转)
-export enum ETypeAbbrMap {
-  // 块级元素
-  d = "NodeDocument",
-  h = "NodeHeading",
-  l = "NodeList",
-  i = "NodeListItem",
-  c = "NodeCodeBlock",
-  m = "NodeMathBlock",
-  t = "NodeTable",
-  b = "NodeBlockquote",
-  s = "NodeSuperBlock",
-  p = "NodeParagraph",
-  html = "NodeHTMLBlock",
-  query_embed = "NodeBlockQueryEmbed",
-  ial = "NodeKramdownBlockIAL",
-  iframe = "NodeIFrame",
-  widget = "NodeWidget",
-  tb = "NodeThematicBreak",
-  video = "NodeVideo",
-  audio = "NodeAudio",
-  text = "NodeText",
-  img = "NodeImage",
-  link_text = "NodeLinkText",
-  link_dest = "NodeLinkDest",
-  textmark = "NodeTextMark",
-}
+export { ETypeAbbrMap };

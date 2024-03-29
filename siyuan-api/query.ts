@@ -17,7 +17,9 @@ export async function queryChildBlocks(id: BlockId): Promise<Block[]> {
   );
 }
 
-export async function queryFirstChildBlock(block: Block): Promise<Block> {
+export async function queryFirstChildBlock(
+  block: Block
+): Promise<Block | undefined> {
   let children = await queryChildBlocks(block.id);
   return children.find((e) => {
     return e.content === block.fcontent;
@@ -83,6 +85,9 @@ export async function queryBlockById(id: string): Promise<Block | undefined> {
   return blockList[0];
 }
 
+/**
+ * @deprecated 对于嵌入块有些时候查询不成功
+ */
 export async function queryRefBlockById(
   id: string
 ): Promise<Block[] | undefined> {
@@ -91,6 +96,23 @@ export async function queryRefBlockById(
     (SELECT def_block_id FROM refs WHERE block_id='${id}') `
   );
   return blockList;
+}
+
+/**
+ * queryRefBlockById 的替代方法，针对嵌入块进行了优化
+ */
+export async function queryRefBlockByBlock(
+  block: Block
+): Promise<Block[] | undefined> {
+  if (block.type === "query_embed") {
+    const stmt = block.markdown.match(/(?<=\{\{).*(?=\}\})/);
+    return await requestQuerySQL(stmt[0]);
+  } else {
+    return await requestQuerySQL(
+      `SELECT blocks.* FROM blocks WHERE blocks.id IN
+      (SELECT def_block_id FROM refs WHERE block_id='${block.id}') `
+    );
+  }
 }
 
 export async function queryRefInfoById(id: BlockId): Promise<Ref[]> {

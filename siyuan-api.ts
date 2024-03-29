@@ -6,24 +6,12 @@
  * API 文档见 [API_zh_CN.md](https://github.com/siyuan-note/siyuan/blob/master/API_zh_CN.md)
  */
 
-declare global {
-  export interface Window {
-    siyuan: Window_siyuan;
-    Lute: typeof Lute;
-  }
-}
-export interface Window {
-  siyuan: Window_siyuan;
-  Lute: typeof Lute;
-}
-
 import {
   Dialog,
   fetchSyncPost,
   IMenuItemOption,
   IObject,
   IWebSocketData,
-  Lute,
 } from "siyuan";
 import {
   Notebook,

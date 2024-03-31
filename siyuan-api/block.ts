@@ -1,5 +1,5 @@
 import { IOperation } from "siyuan";
-import { DocumentId, BlockId } from "../types/siyuan-api";
+import { BlockId } from "../types/siyuan-api";
 import { getBlockAttrs, setBlockAttrs } from "./attr";
 import { request } from "./common";
 
@@ -17,6 +17,13 @@ export async function getParentNextChildID(
 }
 
 type DataType = "markdown" | "dom";
+
+type Transaction = {
+  timestamp: number,
+  doOperations: IOperation[];
+  undoOperations: null;
+};
+
 export async function insertBlock(data: {
   dataType: DataType;
   data: string;
@@ -37,7 +44,7 @@ export async function updateBlock(data: {
   dataType: DataType;
   data: string;
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   return request("/api/block/updateBlock", data);
 }
 
@@ -48,7 +55,7 @@ export async function updateBlockWithAttr(data: {
   dataType: DataType;
   data: string;
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   const attr = await getBlockAttrs(data.id);
   const result = await updateBlock(data);
   await setBlockAttrs({
@@ -60,7 +67,7 @@ export async function updateBlockWithAttr(data: {
 
 export async function deleteBlock(data: {
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   return request("/api/block/deleteBlock", data);
 }
 
@@ -72,7 +79,7 @@ export async function moveBlock(data: {
   id: string;
   previousID: string;
   parentID: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   if (!data.previousID && !data.parentID) {
     console.error(`moveBlock缺少参数id`);
   }

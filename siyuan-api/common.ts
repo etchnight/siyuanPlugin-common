@@ -1,4 +1,4 @@
-import { type IWebSocketData, fetchSyncPost } from "siyuan";
+import { type IWebSocketData, fetchSyncPost, IObject } from "siyuan";
 import { type Block, type BlockTree } from "../types/siyuan-api";
 export enum ETypeAbbrMap {
   // 块级元素
@@ -22,10 +22,32 @@ export enum ETypeAbbrMap {
   "video" = "NodeVideo",
   "audio" = "NodeAudio",
 }
-export async function request(url: string, data: any) {
+
+export async function request(
+  url: string,
+  data: {
+    [key: string]: any;
+  }
+) {
+  //入参检查
+  for (let key of Object.keys(data)) {
+    if (key.search("id") !== -1 || key.search("Id") !== -1) {
+      if (typeof data[key] !== typeof "") {
+        continue;
+      }
+      if (!isBlock(data[key])) {
+        console.warn(`${url} 入参 ${key} 不是BlockId，可能存在错误`);
+      }
+    }
+  }
+
   let response: IWebSocketData = await fetchSyncPost(url, data);
   if (response.code !== 0) {
-    console.warn(response);
+    console.group("与内核通信错误：");
+    console.warn("调用接口：", url);
+    console.warn("数据：", data);
+    console.warn("返回值：", response);
+    console.groupEnd();
   }
   let res = response.code === 0 ? response.data : null;
   return res;

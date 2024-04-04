@@ -1,20 +1,7 @@
-import { DocumentId, BlockId } from "../types/siyuan-api";
+import { IOperation } from "siyuan";
+import { BlockId } from "../types/siyuan-api";
 import { getBlockAttrs, setBlockAttrs } from "./attr";
 import { request } from "./common";
-
-export interface IResdoOperations {
-  doOperations: doOperation[];
-  undoOperations: doOperation[] | null;
-}
-
-type doOperation = {
-  action: string;
-  data: string;
-  id: BlockId;
-  parentID: BlockId | DocumentId;
-  previousID: BlockId;
-  retData: null;
-};
 
 /**
  * @description 返回的值不是父级的第一个子块，目前作用未知
@@ -30,13 +17,20 @@ export async function getParentNextChildID(
 }
 
 type DataType = "markdown" | "dom";
+
+type Transaction = {
+  timestamp: number,
+  doOperations: IOperation[];
+  undoOperations: null;
+};
+
 export async function insertBlock(data: {
   dataType: DataType;
   data: string;
   nextID?: BlockId;
   previousID?: BlockId;
   parentID?: BlockId;
-}): Promise<IResdoOperations[]> {
+}): Promise<IOperation[]> {
   if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
   }
@@ -50,7 +44,7 @@ export async function updateBlock(data: {
   dataType: DataType;
   data: string;
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   return request("/api/block/updateBlock", data);
 }
 
@@ -61,7 +55,7 @@ export async function updateBlockWithAttr(data: {
   dataType: DataType;
   data: string;
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   const attr = await getBlockAttrs(data.id);
   const result = await updateBlock(data);
   await setBlockAttrs({
@@ -73,7 +67,7 @@ export async function updateBlockWithAttr(data: {
 
 export async function deleteBlock(data: {
   id: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   return request("/api/block/deleteBlock", data);
 }
 
@@ -85,7 +79,7 @@ export async function moveBlock(data: {
   id: string;
   previousID: string;
   parentID: string;
-}): Promise<IResdoOperations[]> {
+}): Promise<Transaction[]> {
   if (!data.previousID && !data.parentID) {
     console.error(`moveBlock缺少参数id`);
   }

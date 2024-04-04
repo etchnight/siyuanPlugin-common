@@ -12,11 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cz-conventional-changelog": "^3.3.0",
-    "lodash": "^4.17.21",
-    "siyuan": "^0.7.9"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.195"
+    "siyuan": "^0.9.6"
   },
   "config": {
     "commitizen": {

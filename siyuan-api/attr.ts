@@ -22,9 +22,9 @@ export async function setBlockAttrs(data: {
   return request("/api/attr/setBlockAttrs", data);
 }
 
-export async function getBlockAttrs(id: BlockId): Promise<{
+export async function getBlockAttrs(data: { id: BlockId }): Promise<{
   id: BlockId;
   [key: string]: string;
 }> {
-  return request("/api/attr/getBlockAttrs", { id: id });
+  return request("/api/attr/getBlockAttrs", data);
 }

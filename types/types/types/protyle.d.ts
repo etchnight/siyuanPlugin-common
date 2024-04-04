@@ -1,4 +1,3 @@
-//*copy from siyuan\app\src\types\protyle.d.ts
 interface ILuteNode {
     TokensStr: () => string;
     __internal_object__: {
@@ -172,6 +171,8 @@ declare class Lute {
     public SetSpin(enable: boolean): void;
 
     public SetTextMark(enable: boolean): void;
+
+    public SetHTMLTag2TextMark(enable: boolean): void;
 
     public SetHeadingID(enable: boolean): void;
 
@@ -463,7 +464,7 @@ interface IProtyle {
     gutter?: import("../protyle/gutter").Gutter,
     breadcrumb?: import("../protyle/breadcrumb").Breadcrumb,
     title?: import("../protyle/header/Title").Title,
-    background?: import("../protyle/header/background").Background,
+    background?: import("../protyle/header/Background").Background,
     contentElement?: HTMLElement,
     options: IOptions;
     lute?: Lute;

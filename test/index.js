@@ -43,20 +43,20 @@ const request = async (url, data) => {
   return res;
 };
 
-const getEmbedBlock = async () => {
-  return request("/api/outline/getDocOutline", {
-   id:'20240202172249-9l1gp4f'
-  }); 
+const getDoc = async () => {
+  return request("/api/filetree/getDoc", {
+    id: "20230329233632-fxl2n2q",
+  });
 };
 
 const main = async () => {
-  let res = await getEmbedBlock();
+  let res = await getDoc();
   if (!res) {
     console.warn("无返回值");
     return;
   }
   console.log(res);
   let res2 = JSON.stringify(res);
-  fs.writeFileSync("./test/result.json", res2);
+  fs.writeFileSync("./test/result2.json", res2, { flag: "w", encoding: "utf-8" });
 };
 main();

@@ -30,7 +30,6 @@ export const buildSetting = (
     plugin: Plugin;
   }
 ): Setting => {
-
   let eleList: { [key: string]: HTMLInputElement } = {};
   for (let key of Object.keys(data)) {
     let ele: HTMLInputElement;

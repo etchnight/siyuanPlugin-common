@@ -18,8 +18,8 @@ export async function getParentNextChildID(
 
 type DataType = "markdown" | "dom";
 
-type Transaction = {
-  timestamp: number,
+export type Transaction = {
+  timestamp: number;
   doOperations: IOperation[];
   undoOperations: null;
 };
@@ -30,7 +30,7 @@ export async function insertBlock(data: {
   nextID?: BlockId;
   previousID?: BlockId;
   parentID?: BlockId;
-}): Promise<IOperation[]> {
+}): Promise<Transaction[]> {
   if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
   }
@@ -56,7 +56,7 @@ export async function updateBlockWithAttr(data: {
   data: string;
   id: string;
 }): Promise<Transaction[]> {
-  const attr = await getBlockAttrs(data.id);
+  const attr = await getBlockAttrs({ id: data.id });
   const result = await updateBlock(data);
   await setBlockAttrs({
     id: data.id,

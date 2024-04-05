@@ -433,8 +433,10 @@ interface IOptions {
     /** 编辑器异步渲染完成后的回调方法 */
     after?(protyle: import("../protyle").Protyle): void;
 }
-
-interface IProtyle {
+/**
+ * 注意，其与npm 包 siyuan中的Protyle不同，是笔记内部使用的，而非插件中使用的
+ */
+export interface IProtyle {
     getInstance: () => import("../protyle").Protyle,
     observerLoad?: ResizeObserver,
     observer?: ResizeObserver,

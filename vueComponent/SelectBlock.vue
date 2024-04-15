@@ -39,7 +39,12 @@ import {
 } from "../siyuan-api/search";
 import { requestQuerySQL } from "../siyuan-api/query";
 import { Block, BlockTree } from "../types/siyuan-api";
-import { block2blockTree } from "../siyuan-api/common";
+import { BlockTypes, block2blockTree } from "../siyuan-api/common";
+
+const props = defineProps<{
+  searchTypes?: ISearchTypes;
+}>();
+
 /**
  * 可以在父组件中显示的文本
  */
@@ -64,20 +69,23 @@ const querySearchAsync = async (
   cb: (arg: any) => void
 ) => {
   blocks = []; //清空返回结果
-  let types: ISearchTypes = {
-    blockquote: false,
-    codeBlock: false,
-    document: true,
-    embedBlock: false,
-    heading: true,
-    htmlBlock: false,
-    list: false,
-    listItem: false,
-    mathBlock: false,
-    paragraph: true,
-    superBlock: false,
-    table: false,
-  };
+  let types: ISearchTypes = Object.assign(
+    {
+      blockquote: false,
+      codeBlock: false,
+      document: true,
+      embedBlock: false,
+      heading: true,
+      htmlBlock: false,
+      list: false,
+      listItem: false,
+      mathBlock: false,
+      paragraph: true,
+      superBlock: false,
+      table: false,
+    },
+    props.searchTypes
+  );
   //处理直接粘贴的标题
   let headReg = /#{1,6} /;
   if (queryString.search(headReg) === 0) {
@@ -88,8 +96,21 @@ const querySearchAsync = async (
     types.heading = true;
   }
   if (!queryString) {
+    //空查询返回最近更新的块
+    let typeLimit = Object.keys(types).reduce((pre, cur) => {
+      let obj = BlockTypes.find((obj) => {
+        return obj.search === cur;
+      });
+      if (types[cur]) {
+        return pre + `${pre ? "OR" : ""} type = '${obj.sql}'`;
+      } else {
+        return pre;
+      }
+    }, "");
+
     const res = (await requestQuerySQL(
-      "SELECT * FROM blocks  ORDER  BY updated  DESC  LIMIT 10"
+      `SELECT * FROM blocks WHERE ${typeLimit} 
+      ORDER BY updated DESC LIMIT 10`
     )) as Block[];
     blocks = res.map((e) => {
       return { ...block2blockTree(e), contentCleared: e.content, value: e.id };

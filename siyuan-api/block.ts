@@ -19,7 +19,7 @@ export async function getParentNextChildID(
 type DataType = "markdown" | "dom";
 
 type Transaction = {
-  timestamp: number,
+  timestamp: number;
   doOperations: IOperation[];
   undoOperations: null;
 };
@@ -56,7 +56,7 @@ export async function updateBlockWithAttr(data: {
   data: string;
   id: string;
 }): Promise<Transaction[]> {
-  const attr = await getBlockAttrs(data.id);
+  const attr = await getBlockAttrs({ id: data.id });
   const result = await updateBlock(data);
   await setBlockAttrs({
     id: data.id,

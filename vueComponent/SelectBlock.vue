@@ -3,6 +3,7 @@
     v-model="state"
     :fetch-suggestions="querySearchAsync"
     :placeholder="'输入查询，选择确认'"
+    :teleported="teleported === undefined ? true : teleported"
     @select="handleSelect"
     popper-class="protyle-hint b3-list b3-list--background block-autocomplete"
     :disabled="selected"
@@ -40,9 +41,10 @@ import {
 import { requestQuerySQL } from "../siyuan-api/query";
 import { Block, BlockTree } from "../types/siyuan-api";
 import { BlockTypes, block2blockTree } from "../siyuan-api/common";
-
 const props = defineProps<{
   searchTypes?: ISearchTypes;
+  teleported?: boolean; //是否将 popover 的下拉列表插入至 body 元素
+  width?: string;
 }>();
 
 /**

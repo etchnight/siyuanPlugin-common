@@ -30,7 +30,7 @@ export async function insertBlock(data: {
   nextID?: BlockId;
   previousID?: BlockId;
   parentID?: BlockId;
-}): Promise<IOperation[]> {
+}): Promise<Transaction[]> {
   if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
   }

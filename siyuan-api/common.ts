@@ -1,5 +1,69 @@
 import { type IWebSocketData, fetchSyncPost, IObject } from "siyuan";
 import { type Block, type BlockTree } from "../types/siyuan-api";
+
+export const BlockTypes = [
+  {
+    sql: "d",
+    node: "NodeDocument",
+    search: "document",
+  },
+  {
+    sql: "h",
+    node: "NodeHeading",
+    search: "heading",
+  },
+  {
+    sql: "p",
+    node: "NodeParagraph",
+    search: "paragraph",
+  },
+  {
+    sql: "l",
+    node: "NodeList",
+    search: "list",
+  },
+  {
+    sql: "i",
+    node: "NodeListItem",
+    search: "listItem",
+  },
+  {
+    sql: "b",
+    node: "NodeBlockquote",
+    search: "blockquote",
+  },
+  {
+    sql: "c",
+    node: "NodeCodeBlock",
+    search: "codeBlock",
+  },
+  {
+    sql: "s",
+    node: "NodeSuperBlock",
+    search: "superBlock",
+  },
+  {
+    sql: "m",
+    node: "NodeMathBlock",
+    search: "mathBlock",
+  },
+  {
+    sql: "t",
+    node: "NodeTable",
+    search: "table",
+  },
+  {
+    sql: "query_embed",
+    node: "NodeBlockQueryEmbed",
+    search: "embedBlock",
+  },
+  {
+    sql: "html",
+    node: "NodeHTMLBlock",
+    search: "htmlBlock",
+  },
+];
+
 export enum ETypeAbbrMap {
   // 块级元素
   "d" = "NodeDocument",

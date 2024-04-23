@@ -85,3 +85,10 @@ export async function moveBlock(data: {
   }
   return request("/api/block/moveBlock", data);
 }
+
+export async function getHeadingLevelTransaction(data: {
+  id: string;
+  level: number;
+}): Promise<Transaction> {
+  return request("/api/block/getHeadingLevelTransaction", data);
+}

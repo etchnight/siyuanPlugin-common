@@ -1,2 +1,2 @@
 export * from "./types/types/index";
-export * from "siyuan";
+export * from "./types/types/protyle";

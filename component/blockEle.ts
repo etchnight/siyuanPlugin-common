@@ -1,5 +1,6 @@
 import { Lute as LuteClass } from "siyuan";
-declare const Lute: typeof LuteClass;
+import { Lute as LuteClass2 } from "../types/global-siyuan";
+declare const Lute: typeof LuteClass | typeof LuteClass2;
 
 //* 可使用detail.protyle.lute.SpinBlockDOM(`<div>`)直接渲染
 //*详细信息见'app\src\protyle\hint\extend.ts'
@@ -105,7 +106,7 @@ ${htmls.reduce((pre, cur) => pre + cur, "")}
  * @param lute 涉及到是否开关某些块
  * @returns
  */
-export const buildBlock = (html: string, lute: LuteClass, type?: EHintType) => {
+export const buildBlock = (html: string, lute: LuteClass | LuteClass2, type?: EHintType) => {
   const div = document.createElement("div");
   let blockHtml;
   if (type === EHintType.html) {

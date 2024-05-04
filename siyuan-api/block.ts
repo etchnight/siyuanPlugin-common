@@ -63,9 +63,13 @@ export async function updateBlock(
 ): Promise<TransactionRes[]> {
   const res: TransactionRes[] = await request("/api/block/updateBlock", data);
   if (protyle && oldHtml) {
+    //*undo id必须一致
+    const div = document.createElement("div");
+    div.innerHTML = oldHtml;
+    (div.firstChild as HTMLElement).setAttribute("data-node-id", data.id);
     protyle.undo.add(
       res[0].doOperations,
-      [{ action: "update", data: oldHtml, id: data.id }],
+      [{ action: "update", data: div.innerHTML, id: data.id }],
       protyle
     );
   }

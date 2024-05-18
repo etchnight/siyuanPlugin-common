@@ -37,6 +37,7 @@ export async function insertBlock(
 ): Promise<TransactionRes[]> {
   if (!data.nextID && !data.previousID && !data.parentID) {
     console.error(`insertBlock缺少参数id`);
+    return;
   }
   const res: TransactionRes[] = await request("/api/block/insertBlock", data);
   if (protyle) {

@@ -1,13 +1,13 @@
 import { Setting, Plugin } from "siyuan";
 
 export const switchEle = (): HTMLInputElement => {
-  let ele = document.createElement("input");
+  const ele = document.createElement("input");
   ele.className = "b3-switch fn__flex-center";
   ele.type = "checkbox";
   return ele;
 };
 export const textEle = () => {
-  let ele = document.createElement("input");
+  const ele = document.createElement("input");
   ele.className = "b3-text-field fn__flex-center";
   ele.type = "text";
   return ele;
@@ -20,6 +20,7 @@ export type SettingData = {
   type: string;
   title: string;
   value: string | boolean;
+  description?: string;
 };
 
 export const buildSetting = (
@@ -30,8 +31,8 @@ export const buildSetting = (
     plugin: Plugin;
   }
 ): Setting => {
-  let eleList: { [key: string]: HTMLInputElement } = {};
-  for (let key of Object.keys(data)) {
+  const eleList: { [key: string]: HTMLInputElement } = {};
+  for (const key of Object.keys(data)) {
     let ele: HTMLInputElement;
     switch (data[key].type) {
       case "switch":
@@ -45,7 +46,7 @@ export const buildSetting = (
   }
   const setting = new Setting({
     confirmCallback: async () => {
-      for (let key of Object.keys(data)) {
+      for (const key of Object.keys(data)) {
         let value: string | boolean;
         switch (data[key].type) {
           case "switch":
@@ -63,9 +64,10 @@ export const buildSetting = (
       window.location.reload();
     },
   });
-  for (let key of Object.keys(data)) {
+  for (const key of Object.keys(data)) {
     setting.addItem({
       title: data[key].title,
+      description: data[key].description || "",
       createActionElement: () => {
         switch (data[key].type) {
           case "switch":

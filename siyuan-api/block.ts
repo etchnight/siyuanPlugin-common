@@ -100,13 +100,17 @@ export async function updateBlockWithAttr(
   return result;
 }
 
+/**
+ * TODO undo仍然存在问题
+ */
 export async function deleteBlock(
   data: {
     id: string;
   },
   protyle?: IProtyle,
   oldHtml?: string,
-  parentID?: BlockId
+  parentID?: BlockId,
+  previousID?: BlockId
 ): Promise<TransactionRes[]> {
   const res: TransactionRes[] = await request("/api/block/deleteBlock", data);
   if (protyle && oldHtml) {
@@ -115,7 +119,13 @@ export async function deleteBlock(
     div.innerHTML = oldHtml;
     (div.firstChild as HTMLElement).setAttribute("data-node-id", data.id);
     const undo = res[0].doOperations.map((e) => {
-      return { action: "insert", data: div.innerHTML, id: data.id, parentID };
+      return {
+        action: "insert",
+        data: div.innerHTML,
+        id: e.id,
+        parentID,
+        previousID,
+      };
     });
     protyle.undo.add(res[0].doOperations, undo.reverse(), protyle);
   }

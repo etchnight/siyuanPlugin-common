@@ -43,7 +43,9 @@ export async function insertBlock(
   if (protyle) {
     protyle.undo.add(
       res[0].doOperations,
-      [{ action: "delete", id: res[0].doOperations[0].id }],
+      res[0].doOperations.map((e) => {
+        return { action: "delete", id: e.id };
+      }),
       protyle
     );
   }
@@ -98,10 +100,26 @@ export async function updateBlockWithAttr(
   return result;
 }
 
-export async function deleteBlock(data: {
-  id: string;
-}): Promise<TransactionRes[]> {
-  return request("/api/block/deleteBlock", data);
+export async function deleteBlock(
+  data: {
+    id: string;
+  },
+  protyle?: IProtyle,
+  oldHtml?: string,
+  parentID?: BlockId
+): Promise<TransactionRes[]> {
+  const res: TransactionRes[] = await request("/api/block/deleteBlock", data);
+  if (protyle && oldHtml) {
+    //*undo id必须一致
+    const div = document.createElement("div");
+    div.innerHTML = oldHtml;
+    (div.firstChild as HTMLElement).setAttribute("data-node-id", data.id);
+    const undo = res[0].doOperations.map((e) => {
+      return { action: "insert", data: div.innerHTML, id: data.id, parentID };
+    });
+    protyle.undo.add(res[0].doOperations, undo.reverse(), protyle);
+  }
+  return res;
 }
 
 /**

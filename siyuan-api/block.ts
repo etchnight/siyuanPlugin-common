@@ -1,5 +1,5 @@
-import { IOperation } from "siyuan";
-import { IProtyle } from "../types/global-siyuan";
+import { IOperation, IProtyle } from "siyuan";
+//import { IProtyle } from "../types/global-siyuan";
 import { BlockId } from "../types/siyuan-api";
 import { getBlockAttrs, setBlockAttrs } from "./attr";
 import { request } from "./common";
@@ -125,7 +125,7 @@ export async function deleteBlock(
         id: e.id,
         parentID,
         previousID,
-      };
+      } as IOperation;
     });
     protyle.undo.add(res[0].doOperations, undo.reverse(), protyle);
   }

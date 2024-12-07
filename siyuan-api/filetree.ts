@@ -25,7 +25,7 @@ export async function getDoc(data: {
   scroll: boolean;
   type: NodeType;
 }> {
-  for (let key of Object.keys(data)) {
+  for (const key of Object.keys(data)) {
     if (!isBlock(data[key])) {
       throw `getDoc输入参数${key}不是BlockId!`;
     }

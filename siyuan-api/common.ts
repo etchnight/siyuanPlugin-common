@@ -94,7 +94,7 @@ export async function request(
   }
 ) {
   //入参检查
-  for (let key of Object.keys(data)) {
+  for (const key of Object.keys(data)) {
     if (key.search("id") !== -1 || key.search("Id") !== -1) {
       if (typeof data[key] !== typeof "") {
         continue;
@@ -106,6 +106,16 @@ export async function request(
   }
 
   let response: IWebSocketData = await fetchSyncPost(url, data);
+  if (url === "/api/file/getFile" && !response.code) {
+    //这个API成功后不会返回code字段
+    response = {
+      code: 0,
+      data: response,
+      msg: "",
+      cmd: "",
+      sid: "",
+    };
+  }
   if (response.code !== 0) {
     console.group("与内核通信错误：");
     console.warn("调用接口：", url);
@@ -113,7 +123,7 @@ export async function request(
     console.warn("返回值：", response);
     console.groupEnd();
   }
-  let res = response.code === 0 ? response.data : null;
+  const res = response.code === 0 ? response.data : null;
   return res;
 }
 

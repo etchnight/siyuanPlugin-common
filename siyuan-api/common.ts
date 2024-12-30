@@ -105,8 +105,8 @@ export async function request(
     }
   }
 
-  let response: IWebSocketData = await fetchSyncPost(url, data);
-  if (url === "/api/file/getFile" && !response.code) {
+  const response: IWebSocketData = await fetchSyncPost(url, data);
+  /*   if (url === "/api/file/getFile" && !response.code) {
     //这个API成功后不会返回code字段
     response = {
       code: 0,
@@ -115,7 +115,7 @@ export async function request(
       cmd: "",
       sid: "",
     };
-  }
+  } */
   if (response.code !== 0) {
     console.group("与内核通信错误：");
     console.warn("调用接口：", url);

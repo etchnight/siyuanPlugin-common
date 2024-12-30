@@ -1,7 +1,13 @@
+import { fetchPost } from "siyuan";
 import { request } from "./common";
 
+//todo getFile比较特殊，不能使用request
 export async function getFile(data: { path: string }): Promise<any> {
-  return request("/api/file/getFile", data);
+  return new Promise((res, _rej) => {
+    fetchPost("/api/file/getFile", data, (e) => {
+      res(e);
+    });
+  });
 }
 
 export async function putFile(data: {

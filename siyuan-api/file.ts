@@ -3,11 +3,17 @@ import { request } from "./common";
 
 //todo getFile比较特殊，不能使用request
 export async function getFile(data: { path: string }): Promise<any> {
-  return new Promise((res, _rej) => {
+  const res = await new Promise((resolve, _rej) => {
     fetchPost("/api/file/getFile", data, (e) => {
-      res(e);
+      resolve(e);
     });
   });
+  if (typeof res === "string") {
+    return res;
+  } else {
+    console.error(res);
+    throw new Error("获取文件失败");
+  }
 }
 
 export async function putFile(data: {

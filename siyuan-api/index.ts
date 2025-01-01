@@ -1,4 +1,5 @@
-/* import * as attr from "./attr";
+//组合导出
+import * as attr from "./attr";
 import * as block from "./block";
 
 import * as file from "./file";
@@ -16,7 +17,8 @@ export const siyuanApi = {
   query,
   search,
   transaction,
-}; */
+};
+//全部直接导出
 export * from "./attr";
 export * from "./block";
 

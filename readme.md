@@ -3,8 +3,8 @@
 ## 开发备忘
 
 - 思源内部 API 位置：`siyuan\\kernel\\api\\router.go`
-- 所有 API 必须返回 request 本身，除了错误处理，不对返回值做修改，即必须为`return request("/api/XXX", { args : value })`
-- 入参均写为对象形式，即`data:{key : string...}`
+- 所有 API 必须返回 request 本身，除了错误处理，不对返回值做修改，即必须为`return request("/api/XXX", data)`
+- 入参均写为对象形式，即`data:{key : string...}`,即使只有一个参数也要写成对象形式
 
 ### siyuan 全部声明生成(.d.ts)
 

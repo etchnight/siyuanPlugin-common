@@ -1,18 +1,17 @@
-import { fetchPost } from "siyuan";
+import { fetchPost, IObject } from "siyuan";
 import { request } from "./common";
 
-//todo getFile比较特殊，不能使用request
-export async function getFile(data: { path: string }): Promise<any> {
+//* 获取文件，Json会被解析为对象，其他文件会读取为字符串
+export async function getFile(data: { path: string }) {
   const res = await new Promise((resolve, _rej) => {
     fetchPost("/api/file/getFile", data, (e) => {
       resolve(e);
     });
   });
-  if (typeof res === "string") {
-    return res;
+  if (typeof res === "string" || data.path.endsWith(".json")) {
+    return res as string | IObject;
   } else {
     console.error(res);
-    throw new Error("获取文件失败");
   }
 }
 

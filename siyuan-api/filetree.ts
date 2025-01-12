@@ -44,5 +44,3 @@ export async function duplicateDoc(id: BlockId): Promise<{
   }
   return request("/api/filetree/duplicateDoc", { id: id });
 }
-
-

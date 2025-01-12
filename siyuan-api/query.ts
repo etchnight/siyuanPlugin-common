@@ -20,7 +20,7 @@ export async function queryChildBlocks(id: BlockId): Promise<Block[]> {
 export async function queryFirstChildBlock(
   block: Block
 ): Promise<Block | undefined> {
-  let children = await queryChildBlocks(block.id);
+  const children = await queryChildBlocks(block.id);
   return children.find((e) => {
     return e.content === block.fcontent;
   });
@@ -79,7 +79,7 @@ export async function queryBlocksByTag(tag: string): Promise<Block[]> {
 }
 
 export async function queryBlockById(id: string): Promise<Block | undefined> {
-  let blockList = await requestQuerySQL(
+  const blockList = await requestQuerySQL(
     `SELECT * FROM blocks WHERE id='${id}'`
   );
   return blockList[0];
@@ -91,7 +91,7 @@ export async function queryBlockById(id: string): Promise<Block | undefined> {
 export async function queryRefBlockById(
   id: string
 ): Promise<Block[] | undefined> {
-  let blockList = await requestQuerySQL(
+  const blockList = await requestQuerySQL(
     `SELECT blocks.* FROM blocks WHERE blocks.id IN
     (SELECT def_block_id FROM refs WHERE block_id='${id}') `
   );

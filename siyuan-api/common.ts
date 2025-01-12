@@ -1,5 +1,5 @@
-import { type IWebSocketData, fetchSyncPost, IObject } from "siyuan";
-import { type Block, type BlockTree } from "../types/siyuan-api";
+import { type IWebSocketData, fetchSyncPost } from "siyuan";
+import { Block, BlockTree } from "../types/siyuan-api";
 
 export const BlockTypes = [
   {
@@ -64,6 +64,9 @@ export const BlockTypes = [
   },
 ];
 
+/**
+ * BlockType => NodeType
+ */
 export enum ETypeAbbrMap {
   // 块级元素
   "d" = "NodeDocument",
@@ -106,16 +109,6 @@ export async function request(
   }
 
   const response: IWebSocketData = await fetchSyncPost(url, data);
-  /*   if (url === "/api/file/getFile" && !response.code) {
-    //这个API成功后不会返回code字段
-    response = {
-      code: 0,
-      data: response,
-      msg: "",
-      cmd: "",
-      sid: "",
-    };
-  } */
   if (response.code !== 0) {
     console.group("与内核通信错误：");
     console.warn("调用接口：", url);

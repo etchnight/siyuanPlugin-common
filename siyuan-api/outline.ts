@@ -1,4 +1,4 @@
-import { BlockTree, BlockId, ETypeAbbrMap } from "../types/siyuan-api";
+import { BlockTree, BlockId, NodeType } from "../types/siyuan-api";
 import { request } from "./common";
 
 export type DocOutline = {
@@ -7,7 +7,7 @@ export type DocOutline = {
   name: string;
   hPath: string;
   type: string;
-  nodeType: ETypeAbbrMap;
+  nodeType: NodeType;
   subType: string;
   blocks: Array<BlockTree>;
   depth: number;

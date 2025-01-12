@@ -9,11 +9,11 @@ import { request } from "./common";
  * @param id
  * @returns
  */
-export async function getParentNextChildID(
-  id: BlockId
-): Promise<{ id: BlockId }> {
+export async function getParentNextChildID(data: {
+  id: BlockId;
+}): Promise<{ id: BlockId }> {
   return request("/api/block/getParentNextChildID", {
-    id: id,
+    id: data.id,
   });
 }
 

@@ -2,33 +2,10 @@
  * Copyright (c) 2023 frostime. All rights reserved.
  */
 
-import { Lute, Menu } from "siyuan";
-import { ETypeAbbrMap } from "../siyuan-api/common";
 /**
  * Frequently used data structures in SiYuan
  */
-export type DocumentId = string;
 export type BlockId = string;
-export type NotebookId = string;
-export type PreviousID = BlockId;
-export type ParentID = BlockId | DocumentId;
-
-export type Notebook = {
-  id: NotebookId;
-  name: string;
-  icon: string;
-  sort: number;
-  closed: boolean;
-};
-
-export type NotebookConf = {
-  name: string;
-  closed: boolean;
-  refCreateSavePath: string;
-  createDocNameTemplate: string;
-  dailyNoteSavePath: string;
-  dailyNoteTemplatePath: string;
-};
 
 export type BlockType =
   | "d"
@@ -110,17 +87,16 @@ export type BlockSubType =
   | "image"
   | "audio"
   | "video"
-  | "other"
-  | "box"; //!
+  | "other";
 
 /**
  * 数据库查询返回该结果
  * @ial {: [key: string]: string };
  */
-export type Block = {
+export interface Block {
   id: BlockId;
   parent_id?: BlockId;
-  root_id: DocumentId;
+  root_id: BlockId;
   hash: string;
   box: string;
   path: string;
@@ -139,11 +115,11 @@ export type Block = {
   sort: number;
   created: string;
   updated: string;
-};
+}
 /**
  * 数据库refs表查询返回该结果
  */
-export type Ref = {
+export interface Ref {
   id: BlockId;
   def_block_id: BlockId;
   def_block_parent_id: BlockId;
@@ -156,7 +132,7 @@ export type Ref = {
   content: string;
   markdown: string;
   type: "textmark" | "query_embed";
-};
+}
 
 /**
  * 一些搜索类api会返回该 block 结果
@@ -189,80 +165,3 @@ export interface Ial {
   name?: string;
   updated?: string;
 }
-type span = {
-  block_id: BlockId;
-  box: BlockId;
-  content: string;
-  ial: string;
-  id: string;
-  markdown: string;
-  path: string;
-  root_id: DocumentId;
-  type: spanSqliteType;
-};
-export type doOperation = {
-  action: string;
-  data: string;
-  id: BlockId;
-  parentID: BlockId | DocumentId;
-  previousID: BlockId;
-  retData: null;
-};
-
-//declare global {
-export interface window {
-  siyuan: {
-    altIsPressed: boolean;
-    backStack: Array;
-    blockPanels: {
-      app: any;
-      defIds: BlockId[];
-      editors: any[];
-      element: HTMLElement;
-      id: string;
-      isBacklink: undefined | boolean;
-      nodeIds: BlockId[];
-      targetElement: undefined | HTMLElement;
-      x: number;
-      y: number;
-    }[];
-    config: any;
-    ctrlIsPressed: boolean;
-    dialogs: Array;
-    emojis: Array;
-    languages: any;
-    layout: {
-      layout: ue;
-      centerLayout: ue;
-      leftDock: jc;
-      rightDock: jc;
-      bottomDock: jc;
-    };
-    menus: {
-      menu: Menu;
-    };
-    notebooks: Array;
-    reqIds: any;
-    shiftIsPressed: boolean;
-    storage: any;
-    transactions: Array;
-    user: any;
-    ws: Ot;
-  };
-  Lute: typeof Lute;
-}
-//}
-
-//todo 不全，以后再补
-export type spanSqliteType =
-  | "textmark tag"
-  | "textmark strong"
-  | "textmark block-ref"
-  | "textmark text"
-  | "textmark sup"
-  | "textmark mark"
-  | "textmark kbd"
-  | "textmark code";
-
-//\kernel\treenode\node.go(翻转)
-export { ETypeAbbrMap };

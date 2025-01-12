@@ -1,9 +1,4 @@
-import {
-  type Block,
-  BlockTree,
-  NodeType,
-  BlockSubType,
-} from "../types/siyuan-api";
+import { BlockTree, NodeType, BlockSubType } from "../types/siyuan-api";
 import { request } from "./common";
 
 /**
@@ -75,7 +70,7 @@ export async function fullTextSearchBlock(
   matchedRootCount: number;
   pageCount: number;
 }> {
-  let fullTypes: ISearchTypes = {
+  const fullTypes: ISearchTypes = {
     blockquote: true,
     codeBlock: true,
     document: true,
@@ -90,7 +85,7 @@ export async function fullTextSearchBlock(
     table: true,
     databaseBlock: true,
   };
-  for (let typeKey of Object.keys(fullTypes)) {
+  for (const typeKey of Object.keys(fullTypes)) {
     if (types[typeKey] === false) {
       fullTypes[typeKey] = false;
     }

@@ -9,7 +9,7 @@ import * as query from "./query";
 import * as search from "./search";
 import * as transaction from "./transaction";
 import * as render from "./render";
-
+import * as notebook from "./notebook";
 export const siyuanApi = {
   attr,
   block,
@@ -20,6 +20,7 @@ export const siyuanApi = {
   search,
   transaction,
   render,
+  notebook,
 };
 //全部直接导出
 export * from "./attr";
@@ -32,3 +33,4 @@ export * from "./query";
 export * from "./search";
 export * from "./transaction";
 export * from "./render";
+export * from "./notebook";

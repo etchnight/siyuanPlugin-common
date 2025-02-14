@@ -11,7 +11,8 @@ export async function getFile(data: { path: string }) {
   if (typeof res === "string" || data.path.endsWith(".json")) {
     return res as string | IObject;
   } else {
-    console.error(res);
+    //@ts-ignore
+    throw new Error(res.msg);
   }
 }
 

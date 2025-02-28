@@ -1,14 +1,24 @@
 import { BlockId, NodeType } from "../types/siyuan-api";
 import { isBlock, request } from "./common";
 
+//*kernel\api\filetree.go
+
 /**
- *
+ * 
  * @returns content innerHTML 从块开始（而非编辑器）
  */
 export async function getDoc(data: {
   id: BlockId;
   startID?: BlockId;
   endID?: BlockId;
+  index?: any;
+  query?: any;
+  queryTypes?: any;
+  queryMethod?: any;
+  mode?: any;
+  size?: any;
+  isBacklink?: any;
+  highlight?: any;
 }): Promise<{
   blockCount: number;
   box: string;

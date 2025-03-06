@@ -70,6 +70,19 @@ export async function updateBlock(
     const div = document.createElement("div");
     div.innerHTML = oldHtml;
     (div.firstChild as HTMLElement).setAttribute("data-node-id", data.id);
+    //*还原html块中的转义字符
+    const protyleHtml = div.querySelector("protyle-html");
+    if (protyleHtml) {
+      let dataContent = protyleHtml.getAttribute("data-content");
+      dataContent = dataContent
+        .replace(/&amp;/g, "&")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'");
+      protyleHtml.setAttribute("data-content", dataContent);
+    }
     protyle.undo.add(
       res[0].doOperations,
       [{ action: "update", data: div.innerHTML, id: data.id }],
